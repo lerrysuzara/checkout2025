@@ -14,10 +14,14 @@ const CartPage = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const loadCart = () => {
+    // Don't automatically load cart data - wait for explicit call from coreFORCE
+    setLoading(false)
+    
+    // Listen for custom event from coreFORCE
+    const handleCartDataLoaded = (event: CustomEvent) => {
       try {
         setLoading(true)
-        const data = loadCoreFORCEShoppingCart()
+        const data = event.detail
         setCartData(data)
         setError(null)
       } catch (err) {
@@ -28,7 +32,12 @@ const CartPage = () => {
       }
     }
 
-    loadCart()
+    // Listen for the custom event
+    window.addEventListener('cartDataLoaded', handleCartDataLoaded as EventListener)
+    
+    return () => {
+      window.removeEventListener('cartDataLoaded', handleCartDataLoaded as EventListener)
+    }
   }, [])
 
   if (loading) {

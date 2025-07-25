@@ -149,3 +149,41 @@ export const submitOrder = async (orderData: any): Promise<any> => {
   console.log('Order submission:', orderData);
   return { success: true, orderId: 'mock-order-id' };
 };
+
+/**
+ * Function that can be called explicitly from coreFORCE to load cart data
+ * This allows coreFORCE to control when the cart data is loaded
+ */
+export const loadCartFromCoreFORCE = (getShoppingCartItemsFunction: () => any) => {
+  try {
+    console.log('🔄 Loading cart data from coreFORCE...');
+    
+    // Call the provided function to get cart data
+    const coreFORCEData = getShoppingCartItemsFunction();
+    
+    if (!coreFORCEData) {
+      console.error('No cart data returned from coreFORCE');
+      return null;
+    }
+
+    const items = transformCoreFORCEItems(coreFORCEData);
+    const summary = calculateOrderSummaryFromCoreFORCE(coreFORCEData);
+
+    const result = {
+      items,
+      summary,
+      rawData: coreFORCEData
+    };
+
+    console.log('✅ Cart data loaded successfully:', result);
+    return result;
+  } catch (error) {
+    console.error('Error loading cart from coreFORCE:', error);
+    return null;
+  }
+};
+
+// Expose the function globally for coreFORCE to call
+if (typeof window !== 'undefined') {
+  (window as any).loadCartFromCoreFORCE = loadCartFromCoreFORCE;
+}
