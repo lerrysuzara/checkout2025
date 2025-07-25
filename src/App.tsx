@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import CartPage from './pages/CartPage'
 import ShippingPage from './pages/ShippingPage'
 import PaymentPage from './pages/PaymentPage'
@@ -27,9 +27,20 @@ function App() {
 
     console.log('🚀 React App initialized - updateCartData function exposed')
     
+    // Listen for messages from parent window (if in iframe)
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'UPDATE_CART_DATA') {
+        console.log('📨 Received cart data from parent window:', event.data.data)
+        setGlobalCartData(event.data.data)
+      }
+    }
+    
+    window.addEventListener('message', handleMessage)
+    
     return () => {
       ;(window as any).updateCartData = undefined
       ;(window as any).isReactAppReady = undefined
+      window.removeEventListener('message', handleMessage)
     }
   }, [])
 

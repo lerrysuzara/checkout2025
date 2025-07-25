@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>coreFORCE Local Integration</title>
+    <title>coreFORCE Direct Integration</title>
     
     <style>
         body {
@@ -60,13 +60,21 @@
         .status.loading { background: #fff3cd; color: #856404; }
         .status.success { background: #d4edda; color: #155724; }
         .status.error { background: #f8d7da; color: #721c24; }
+        
+        /* React app container styles */
+        #react-checkout-root {
+            min-height: 600px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏪 coreFORCE Local Integration</h1>
-            <p>This demonstrates integration with the local React checkout app</p>
+            <h1>🏪 coreFORCE Direct Integration</h1>
+            <p>This demonstrates direct integration with the React checkout app (no iframes)</p>
         </div>
 
         <div class="control-panel">
@@ -261,18 +269,14 @@
                 const cartData = window.getShoppingCartItems();
                 
                 if (cartData) {
-                    // Send data to iframe via postMessage
-                    const iframe = document.querySelector('#react-checkout-root iframe');
-                    if (iframe && iframe.contentWindow) {
-                        iframe.contentWindow.postMessage({
-                            type: 'UPDATE_CART_DATA',
-                            data: cartData
-                        }, '*');
-                        updateStatus('Cart data sent to React app via postMessage!', 'success');
-                        console.log('✅ Cart data sent to React app via postMessage');
+                    // Use global function to update React app
+                    if (typeof window.updateCartData === 'function') {
+                        window.updateCartData(cartData);
+                        updateStatus('Cart data loaded successfully!', 'success');
+                        console.log('✅ Cart data loaded and sent to React app');
                     } else {
-                        updateStatus('React app iframe not found', 'error');
-                        console.log('❌ React app iframe not found');
+                        updateStatus('React app not ready yet - updateCartData not available', 'error');
+                        console.log('❌ updateCartData not available, React app may not be loaded');
                     }
                 } else {
                     updateStatus('Failed to load cart data', 'error');
@@ -318,55 +322,75 @@
                 
                 console.log('📦 Dispatching mock data:', mockData);
                 
-                // Send data to iframe via postMessage
-                const iframe = document.querySelector('#react-checkout-root iframe');
-                if (iframe && iframe.contentWindow) {
-                    iframe.contentWindow.postMessage({
-                        type: 'UPDATE_CART_DATA',
-                        data: mockData
-                    }, '*');
-                    updateStatus('Mock data sent to React app via postMessage!', 'success');
-                    console.log('✅ Mock data sent via postMessage');
+                // Use global function to update React app
+                if (typeof window.updateCartData === 'function') {
+                    window.updateCartData(mockData);
+                    updateStatus('Mock data loaded successfully!', 'success');
+                    console.log('✅ Mock data sent to React app');
                 } else {
-                    updateStatus('React app iframe not found', 'error');
-                    console.log('❌ React app iframe not found');
+                    updateStatus('React app not ready yet - updateCartData not available', 'error');
+                    console.log('❌ updateCartData not available, React app may not be loaded');
                 }
             }, 1000);
         }
 
-        // Load React app from local development server
+        // Load React app directly (no iframe)
         function loadReactApp() {
             try {
-                // Create an iframe to load the React app from local dev server
-                const iframe = document.createElement('iframe');
-                iframe.src = 'http://localhost:5173/';
-                iframe.style.width = '100%';
-                iframe.style.height = '800px';
-                iframe.style.border = 'none';
-                iframe.style.borderRadius = '8px';
-                iframe.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                updateStatus('Loading React app...', 'loading');
                 
-                // Replace the container content with the iframe
-                const container = document.getElementById('react-checkout-root');
-                container.innerHTML = '';
-                container.appendChild(iframe);
-                
-                console.log('✅ React app iframe loaded from local dev server');
-                updateStatus('React app loaded from local dev server', 'success');
+                // Load CSS first
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://lerrysuzara.github.io/checkout2025/assets/index-449700de.css';
+                link.onload = function() {
+                    console.log('✅ CSS loaded');
+                    
+                    // Load the main React app script
+                    var script = document.createElement('script');
+                    script.type = 'module';
+                    script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index-71fbd9e7.js';
+                    script.onload = function() {
+                        console.log('✅ React app script loaded');
+                        updateStatus('React app loaded successfully', 'success');
+                        
+                        // Wait for React to initialize
+                        setTimeout(() => {
+                            if (typeof window.updateCartData === 'function') {
+                                console.log('✅ updateCartData function is available');
+                                updateStatus('React app fully ready - click button to load cart data', 'success');
+                            } else {
+                                console.log('⚠️ updateCartData function not yet available, waiting...');
+                                // Check again after a delay
+                                setTimeout(() => {
+                                    if (typeof window.updateCartData === 'function') {
+                                        console.log('✅ updateCartData function is now available');
+                                        updateStatus('React app fully ready - click button to load cart data', 'success');
+                                    } else {
+                                        console.log('❌ updateCartData function still not available');
+                                        updateStatus('React app loaded but updateCartData not available', 'error');
+                                    }
+                                }, 2000);
+                            }
+                        }, 1000);
+                    };
+                    script.onerror = function() {
+                        console.error('❌ Failed to load React app script');
+                        updateStatus('Failed to load React app script', 'error');
+                    };
+                    document.head.appendChild(script);
+                };
+                link.onerror = function() {
+                    console.error('❌ Failed to load CSS');
+                    updateStatus('Failed to load CSS', 'error');
+                };
+                document.head.appendChild(link);
                 
             } catch (error) {
                 console.error('Error loading React app:', error);
                 updateStatus('Error loading React app: ' + error.message, 'error');
             }
         }
-
-        // Listen for messages from iframe
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'REACT_APP_READY') {
-                console.log('✅ React app in iframe is ready');
-                updateStatus('React app in iframe is ready', 'success');
-            }
-        });
 
         // Initialize when DOM is ready
         if (document.readyState === 'loading') {
@@ -391,18 +415,19 @@
         // Function to check React app status
         function checkReactAppStatus() {
             console.log('🔍 Checking React app status...');
+            console.log('window.updateCartData:', typeof window.updateCartData);
+            console.log('window.isReactAppReady:', typeof window.isReactAppReady);
             
-            const iframe = document.querySelector('#react-checkout-root iframe');
-            if (iframe && iframe.contentWindow) {
-                updateStatus('✅ React app iframe is loaded and ready', 'success');
-                console.log('✅ React app iframe found and ready');
+            if (typeof window.updateCartData === 'function') {
+                updateStatus('✅ React app is ready - updateCartData function available', 'success');
+            } else if (typeof window.isReactAppReady === 'function' && window.isReactAppReady()) {
+                updateStatus('✅ React app is ready - isReactAppReady returned true', 'success');
             } else {
-                updateStatus('❌ React app iframe not found', 'error');
-                console.log('❌ React app iframe not found');
+                updateStatus('❌ React app not ready - updateCartData function not available', 'error');
             }
         }
         
-        console.log('🚀 Local integration initialized');
+        console.log('🚀 Direct integration initialized');
     </script>
 </body>
 </html> 
