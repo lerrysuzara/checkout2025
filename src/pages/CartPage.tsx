@@ -17,26 +17,23 @@ const CartPage = () => {
     // Don't automatically load cart data - wait for explicit call from coreFORCE
     setLoading(false)
     
-    // Listen for custom event from coreFORCE
-    const handleCartDataLoaded = (event: CustomEvent) => {
-      try {
-        setLoading(true)
-        const data = event.detail
+    // Listen for a global function call from coreFORCE
+    ;(window as any).updateCartData = (data: any) => {
+      console.log('🔄 updateCartData called with:', data)
+      setLoading(true)
+      setTimeout(() => {
         setCartData(data)
         setError(null)
-      } catch (err) {
-        setError('Failed to load cart data')
-        console.error('Error loading cart:', err)
-      } finally {
         setLoading(false)
-      }
+        console.log('✅ Cart data updated via global function')
+      }, 0)
     }
-
-    // Listen for the custom event
-    window.addEventListener('cartDataLoaded', handleCartDataLoaded as EventListener)
+    
+    // Debug: Log when component mounts
+    console.log('🛒 CartPage mounted, waiting for cart data...')
     
     return () => {
-      window.removeEventListener('cartDataLoaded', handleCartDataLoaded as EventListener)
+      ;(window as any).updateCartData = undefined
     }
   }, [])
 
@@ -69,12 +66,14 @@ const CartPage = () => {
   }
 
   if (!cartData || cartData.items.length === 0) {
+    console.log('🛒 Cart is empty. cartData:', cartData, 'items length:', cartData?.items?.length)
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
           <div className="text-gray-400 mb-4">🛒</div>
           <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
           <p className="text-gray-600 mb-4">No items found in your shopping cart.</p>
+          <p className="text-sm text-gray-500 mb-4">Debug: cartData = {JSON.stringify(cartData)}</p>
           <button 
             onClick={() => window.history.back()} 
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
