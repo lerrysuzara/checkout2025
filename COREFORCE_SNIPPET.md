@@ -22,13 +22,13 @@ function loadCheckoutApp() {
     // Load CSS
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://lerrysuzara.github.io/checkout2025/assets/index-b7712f17.css';
+    link.href = 'https://lerrysuzara.github.io/checkout2025/assets/index-2fd291ff.css';
     document.head.appendChild(link);
     
     // Load JS
     var script = document.createElement('script');
     script.type = 'module';
-    script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index-c478256f.js';
+    script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index-b604626c.js';
     document.head.appendChild(script);
 }
 

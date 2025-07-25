@@ -71,13 +71,13 @@ function App() {
             </p>
           </header>
 
-          <Routes>
-            <Route path="/" element={<Navigate to="/cart" replace />} />
-            <Route path="/cart" element={<CartPage globalCartData={globalCartData} />} />
-            <Route path="/shipping" element={<ShippingPage />} />
-            <Route path="/payment" element={<PaymentPage />} />
-            <Route path="/review" element={<ReviewPage />} />
-          </Routes>
+                           <Routes>
+                   <Route path="/" element={<Navigate to="/cart" replace />} />
+                   <Route path="/cart" element={<CartPage globalCartData={globalCartData} />} />
+                   <Route path="/shipping" element={<ShippingPage globalCartData={globalCartData} />} />
+                   <Route path="/payment" element={<PaymentPage />} />
+                   <Route path="/review" element={<ReviewPage />} />
+                 </Routes>
         </div>
       </div>
     </Router>

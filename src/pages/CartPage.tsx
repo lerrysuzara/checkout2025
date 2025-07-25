@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { loadCoreFORCEShoppingCart } from '../services/api'
 import { CartItem, OrderSummary } from '../types'
 
+// Extend Window interface to include our custom functions
+declare global {
+  interface Window {
+    updateCartData?: (data: any) => void;
+  }
+}
+
 interface CartPageProps {
   globalCartData?: any;
 }
@@ -16,6 +23,56 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
   } | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Function to remove item from cart
+  const removeItemFromCart = (itemId: string) => {
+    if (!cartData) return
+
+    const updatedItems = cartData.items.filter(item => item.id !== itemId)
+    
+    if (updatedItems.length === 0) {
+      // If no items left, clear the cart
+      setCartData(null)
+      // Also clear global cart data
+      if (window.updateCartData) {
+        window.updateCartData(null)
+      }
+      return
+    }
+
+    // Recalculate order summary
+    const subtotal = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+    const shipping = parseFloat(cartData.summary.shipping.toString()) || 0
+    const discount = parseFloat(cartData.summary.discount?.toString() || '0') || 0
+    const discountPercent = parseFloat(cartData.summary.discountPercent?.toString() || '0') || 0
+    const totalSavings = parseFloat(cartData.summary.totalSavings?.toString() || '0') || 0
+    const estimatedTax = subtotal * 0.08 // 8% tax rate as example
+    const total = subtotal + shipping + estimatedTax - discount
+
+    const updatedSummary: OrderSummary = {
+      ...cartData.summary,
+      subtotal,
+      tax: estimatedTax,
+      total
+    }
+
+    const updatedCartData = {
+      ...cartData,
+      items: updatedItems,
+      summary: updatedSummary
+    }
+
+    // Update local cart data
+    setCartData(updatedCartData)
+    
+    // Update global cart data so other components (like ShippingPage) get the updated cart
+    if (window.updateCartData) {
+      window.updateCartData(updatedCartData)
+    }
+    
+    console.log('✅ Item removed from cart:', itemId)
+    console.log('🔄 Updated global cart data with remaining items:', updatedItems.length)
+  }
 
   useEffect(() => {
     // Don't automatically load cart data - wait for explicit call from coreFORCE
@@ -119,17 +176,6 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2">
         <div className="bg-white rounded-lg shadow-md p-6 relative">
-          {/* coreFORCE Integration Link */}
-          <div className="absolute top-4 right-4">
-            <a
-              href="https://lerrysuzara.github.io/checkout2025/coreforce-integration-github-pages.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 hover:text-blue-700 transition-colors"
-            >
-              🔗 coreFORCE Demo
-            </a>
-          </div>
           
           <h2 className="text-xl font-semibold mb-6">Shopping Cart</h2>
           
@@ -203,50 +249,35 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
                       )}
                     </div>
                   )}
-                  {/* Show shipping restrictions */}
-                  {item.shippingOptions && (
+                  {/* Show FFL requirement */}
+                  {item.shippingOptions && item.shippingOptions.ship_to_ffl && (
                     <div className="mt-1">
-                      {item.shippingOptions.ship_to_ffl && (
-                        <span className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded mr-1">
-                          FFL Required
-                        </span>
-                      )}
-                      {item.shippingOptions.ship_to_home && (
-                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1">
-                          Home Delivery
-                        </span>
-                      )}
-                      {item.shippingOptions.pickup && (
-                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded mr-1">
-                          Store Pickup
-                        </span>
-                      )}
-                      {item.shippingOptions.ship_to_store && (
-                        <span className="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded mr-1">
-                          Ship to Store
-                        </span>
-                      )}
+                      <span className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded mr-1">
+                        FFL Required
+                      </span>
                     </div>
                   )}
-                  {/* Show product tags */}
-                  {item.productTagIds && item.productTagIds.length > 0 && (
-                    <div className="mt-1">
-                      {item.productTagIds.split(',').map((tagId, index) => (
-                        <span key={index} className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded mr-1">
-                          Tag {tagId}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+
                 </div>
                 <div className="flex items-center justify-between sm:justify-start sm:space-x-4">
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-600">Qty: {item.quantity}</span>
                   </div>
-                  <div className="text-right">
-                    <p className="font-medium text-sm sm:text-base">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </p>
+                  <div className="flex items-center space-x-3">
+                    <div className="text-right">
+                      <p className="font-medium text-sm sm:text-base">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => removeItemFromCart(item.id)}
+                      className="text-red-500 hover:text-red-700 transition-colors p-1"
+                      title="Remove item"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -265,7 +296,7 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
               <span>${summary.subtotal.toFixed(2)}</span>
             </div>
             
-            {summary.discount && summary.discount > 0 && (
+            {summary.discount !== undefined && summary.discount !== null && summary.discount > 0 && (
               <div className="flex justify-between text-sm sm:text-base text-green-600">
                 <span>Discount</span>
                 <span>-${summary.discount.toFixed(2)}</span>
