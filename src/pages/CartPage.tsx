@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { loadCoreFORCEShoppingCart } from '../services/api'
 import { CartItem, OrderSummary } from '../types'
 
-const CartPage = () => {
+interface CartPageProps {
+  globalCartData?: any;
+}
+
+const CartPage = ({ globalCartData }: CartPageProps) => {
   const navigate = useNavigate()
   const [cartData, setCartData] = useState<{
     items: CartItem[];
@@ -17,25 +21,49 @@ const CartPage = () => {
     // Don't automatically load cart data - wait for explicit call from coreFORCE
     setLoading(false)
     
-    // Listen for a global function call from coreFORCE
-    ;(window as any).updateCartData = (data: any) => {
-      console.log('🔄 updateCartData called with:', data)
-      setLoading(true)
-      setTimeout(() => {
-        setCartData(data)
-        setError(null)
+    // Listen for custom event from App component
+    const handleCartDataUpdated = (event: any) => {
+      try {
+        console.log('🔄 Cart data updated via event:', event.detail)
+        setLoading(true)
+        const data = event.detail
+        setTimeout(() => {
+          setCartData(data)
+          setError(null)
+          setLoading(false)
+          console.log('✅ Cart data updated via event')
+        }, 0)
+      } catch (err) {
+        console.error('❌ Error in handleCartDataUpdated:', err)
+        setError('Failed to load cart data')
         setLoading(false)
-        console.log('✅ Cart data updated via global function')
-      }, 0)
+      }
     }
+
+    // Listen for the custom event
+    window.addEventListener('cartDataUpdated', handleCartDataUpdated)
     
     // Debug: Log when component mounts
     console.log('🛒 CartPage mounted, waiting for cart data...')
     
     return () => {
-      ;(window as any).updateCartData = undefined
+      window.removeEventListener('cartDataUpdated', handleCartDataUpdated)
     }
   }, [])
+
+  // Use globalCartData if provided from App component
+  useEffect(() => {
+    if (globalCartData) {
+      console.log('🔄 Using globalCartData from App:', globalCartData)
+      setLoading(true)
+      setTimeout(() => {
+        setCartData(globalCartData)
+        setError(null)
+        setLoading(false)
+        console.log('✅ Cart data set from globalCartData')
+      }, 0)
+    }
+  }, [globalCartData])
 
   if (loading) {
     return (

@@ -343,7 +343,7 @@
                     
                     // Load JS after CSS
                     var script = document.createElement('script');
-                    script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index-dd9622fe.js';
+                    script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index-047f6274.js';
                     script.onload = function() {
                         console.log('✅ React app loaded successfully');
                         updateStatus('React app ready - click button to load cart data', 'success');
@@ -352,6 +352,7 @@
                         setTimeout(() => {
                             if (typeof window.updateCartData === 'function') {
                                 console.log('✅ updateCartData function is available');
+                                updateStatus('React app fully ready - click button to load cart data', 'success');
                             } else {
                                 console.log('⚠️ updateCartData function not yet available, waiting...');
                                 // Check again after a delay
@@ -410,9 +411,12 @@
             console.log('🔍 Checking React app status...');
             console.log('window.loadCartFromCoreFORCE:', typeof window.loadCartFromCoreFORCE);
             console.log('window.updateCartData:', typeof window.updateCartData);
+            console.log('window.isReactAppReady:', typeof window.isReactAppReady);
             
             if (typeof window.updateCartData === 'function') {
                 updateStatus('✅ React app is ready - updateCartData function available', 'success');
+            } else if (typeof window.isReactAppReady === 'function' && window.isReactAppReady()) {
+                updateStatus('✅ React app is ready - isReactAppReady returned true', 'success');
             } else {
                 updateStatus('❌ React app not ready - updateCartData function not available', 'error');
             }

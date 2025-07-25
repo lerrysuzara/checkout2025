@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import CartPage from './pages/CartPage'
 import ShippingPage from './pages/ShippingPage'
@@ -6,6 +6,33 @@ import PaymentPage from './pages/PaymentPage'
 import ReviewPage from './pages/ReviewPage'
 
 function App() {
+  // Global state for cart data
+  const [globalCartData, setGlobalCartData] = useState<any>(null)
+
+  useEffect(() => {
+    // Expose global function immediately when App loads
+    ;(window as any).updateCartData = (data: any) => {
+      console.log('🔄 updateCartData called from App with:', data)
+      setGlobalCartData(data)
+      
+      // Also dispatch a custom event for components that might be listening
+      const event = new CustomEvent('cartDataUpdated', { detail: data })
+      window.dispatchEvent(event)
+    }
+
+    // Also expose a function to check if the app is ready
+    ;(window as any).isReactAppReady = () => {
+      return typeof (window as any).updateCartData === 'function'
+    }
+
+    console.log('🚀 React App initialized - updateCartData function exposed')
+    
+    return () => {
+      ;(window as any).updateCartData = undefined
+      ;(window as any).isReactAppReady = undefined
+    }
+  }, [])
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
@@ -21,7 +48,7 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Navigate to="/cart" replace />} />
-            <Route path="/cart" element={<CartPage />} />
+            <Route path="/cart" element={<CartPage globalCartData={globalCartData} />} />
             <Route path="/shipping" element={<ShippingPage />} />
             <Route path="/payment" element={<PaymentPage />} />
             <Route path="/review" element={<ReviewPage />} />
