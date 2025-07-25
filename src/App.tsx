@@ -4,6 +4,7 @@ import CartPage from './pages/CartPage'
 import ShippingPage from './pages/ShippingPage'
 import PaymentPage from './pages/PaymentPage'
 import ReviewPage from './pages/ReviewPage'
+import { transformCoreFORCECartData, validateCoreFORCECartData } from './utils/coreforceTransformer'
 
 function App() {
   // Global state for cart data
@@ -13,11 +14,24 @@ function App() {
     // Expose global function immediately when App loads
     ;(window as any).updateCartData = (data: any) => {
       console.log('🔄 updateCartData called from App with:', data)
-      setGlobalCartData(data)
       
-      // Also dispatch a custom event for components that might be listening
-      const event = new CustomEvent('cartDataUpdated', { detail: data })
-      window.dispatchEvent(event)
+      // Check if this is coreFORCE data and transform it
+      if (validateCoreFORCECartData(data)) {
+        console.log('✅ Valid coreFORCE data detected, transforming...')
+        const transformedData = transformCoreFORCECartData(data)
+        setGlobalCartData(transformedData)
+        
+        // Also dispatch a custom event for components that might be listening
+        const event = new CustomEvent('cartDataUpdated', { detail: transformedData })
+        window.dispatchEvent(event)
+      } else {
+        console.log('📦 Using data as-is (not coreFORCE format)')
+        setGlobalCartData(data)
+        
+        // Also dispatch a custom event for components that might be listening
+        const event = new CustomEvent('cartDataUpdated', { detail: data })
+        window.dispatchEvent(event)
+      }
     }
 
     // Also expose a function to check if the app is ready
