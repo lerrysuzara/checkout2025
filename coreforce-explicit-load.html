@@ -81,6 +81,10 @@
                 📋 Load Mock Data
             </button>
             
+            <button class="btn" onclick="checkReactAppStatus()">
+                🔍 Check React App Status
+            </button>
+            
             <div id="status" class="status">Ready to load cart data</div>
         </div>
 
@@ -260,22 +264,19 @@
                     
                     if (cartData) {
                         // Use global function to update React app
-                        if (window.updateCartData) {
+                        if (typeof window.updateCartData === 'function') {
                             window.updateCartData(cartData);
                             updateStatus('Cart data loaded successfully!', 'success');
                             console.log('✅ Cart data loaded and sent to React app via global function');
                         } else {
-                            // Fallback to custom event
-                            const event = new CustomEvent('cartDataLoaded', { detail: cartData });
-                            window.dispatchEvent(event);
-                            updateStatus('Cart data loaded successfully!', 'success');
-                            console.log('✅ Cart data loaded and sent to React app via custom event');
+                            updateStatus('React app not ready yet - updateCartData not available', 'error');
+                            console.log('❌ updateCartData not available, React app may not be loaded');
                         }
                     } else {
                         updateStatus('Failed to load cart data', 'error');
                     }
                 } else {
-                    updateStatus('React app not ready yet', 'error');
+                    updateStatus('React app not ready yet - loadCartFromCoreFORCE not available', 'error');
                 }
             } catch (error) {
                 console.error('Error loading cart data:', error);
@@ -319,16 +320,13 @@
                 console.log('📦 Dispatching mock data:', mockData);
                 
                 // Use global function to update React app
-                if (window.updateCartData) {
+                if (typeof window.updateCartData === 'function') {
                     window.updateCartData(mockData);
                     updateStatus('Mock data loaded successfully!', 'success');
                     console.log('✅ Mock data sent via global function');
                 } else {
-                    // Fallback to custom event
-                    const event = new CustomEvent('cartDataLoaded', { detail: mockData });
-                    window.dispatchEvent(event);
-                    updateStatus('Mock data loaded successfully!', 'success');
-                    console.log('✅ Mock data sent via custom event');
+                    updateStatus('React app not ready yet - updateCartData not available', 'error');
+                    console.log('❌ updateCartData not available, React app may not be loaded');
                 }
             }, 1000);
         }
@@ -349,6 +347,25 @@
                     script.onload = function() {
                         console.log('✅ React app loaded successfully');
                         updateStatus('React app ready - click button to load cart data', 'success');
+                        
+                        // Wait a bit for React to initialize
+                        setTimeout(() => {
+                            if (typeof window.updateCartData === 'function') {
+                                console.log('✅ updateCartData function is available');
+                            } else {
+                                console.log('⚠️ updateCartData function not yet available, waiting...');
+                                // Check again after a delay
+                                setTimeout(() => {
+                                    if (typeof window.updateCartData === 'function') {
+                                        console.log('✅ updateCartData function is now available');
+                                        updateStatus('React app fully ready - click button to load cart data', 'success');
+                                    } else {
+                                        console.log('❌ updateCartData function still not available');
+                                        updateStatus('React app loaded but updateCartData not available', 'error');
+                                    }
+                                }, 2000);
+                            }
+                        }, 1000);
                     };
                     script.onerror = function() {
                         console.error('❌ Failed to load React app');
@@ -387,6 +404,19 @@
 
         // Monitor for jQuery conflicts
         setInterval(restoreJQuery, 1000);
+        
+        // Function to check React app status
+        function checkReactAppStatus() {
+            console.log('🔍 Checking React app status...');
+            console.log('window.loadCartFromCoreFORCE:', typeof window.loadCartFromCoreFORCE);
+            console.log('window.updateCartData:', typeof window.updateCartData);
+            
+            if (typeof window.updateCartData === 'function') {
+                updateStatus('✅ React app is ready - updateCartData function available', 'success');
+            } else {
+                updateStatus('❌ React app not ready - updateCartData function not available', 'error');
+            }
+        }
         
         console.log('🚀 Explicit load integration initialized');
     </script>
