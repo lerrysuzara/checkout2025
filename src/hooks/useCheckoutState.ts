@@ -5,7 +5,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { CheckoutState, CartItem, ShippingAddress, PaymentInfo, CheckoutStep } from '../types';
-import { apiService } from '../services/api';
+// import { apiService } from '../services/api';
 import { calculateOrderSummary } from '../services/mockData';
 
 const initialState: CheckoutState = {
@@ -68,12 +68,12 @@ export const useCheckoutState = () => {
     clearAllErrors();
     
     try {
-      const response = await apiService.getCartItems();
-      if (response.success && response.data) {
-        setState(prev => ({ ...prev, cartItems: response.data! }));
-      } else {
-        setError('cart', response.error || 'Failed to load cart items');
-      }
+      // const response = await apiService.getCartItems();
+      // if (response.success && response.data) {
+      //   setState(prev => ({ ...prev, cartItems: response.data! }));
+      // } else {
+      //   setError('cart', response.error || 'Failed to load cart items');
+      // }
     } catch (error) {
       setError('cart', 'Network error while loading cart');
     } finally {
@@ -86,12 +86,12 @@ export const useCheckoutState = () => {
     
     setLoading(true);
     try {
-      const response = await apiService.updateCartItem(itemId, quantity);
-      if (response.success && response.data) {
-        setState(prev => ({ ...prev, cartItems: response.data! }));
-      } else {
-        setError('cart', response.error || 'Failed to update item');
-      }
+      // const response = await apiService.updateCartItem(itemId, quantity);
+      // if (response.success && response.data) {
+      //   setState(prev => ({ ...prev, cartItems: response.data! }));
+      // } else {
+      //   setError('cart', response.error || 'Failed to update item');
+      // }
     } catch (error) {
       setError('cart', 'Network error while updating item');
     } finally {
@@ -118,14 +118,14 @@ export const useCheckoutState = () => {
     clearAllErrors();
     
     try {
-      const response = await apiService.saveShippingAddress(address);
-      if (response.success) {
-        setState(prev => ({ ...prev, shippingAddress: address }));
-        return true;
-      } else {
-        setError('shipping', response.error || 'Failed to save shipping address');
-        return false;
-      }
+      // const response = await apiService.saveShippingAddress(address);
+      // if (response.success) {
+      setState(prev => ({ ...prev, shippingAddress: address }));
+      return true;
+      // } else {
+      //   setError('shipping', response.error || 'Failed to save shipping address');
+      //   return false;
+      // }
     } catch (error) {
       setError('shipping', 'Network error while saving address');
       return false;
@@ -160,13 +160,14 @@ export const useCheckoutState = () => {
         summary: state.orderSummary
       };
 
-      const response = await apiService.submitOrder(orderData);
-      if (response.success && response.data) {
-        return response.data;
-      } else {
-        setError('order', response.error || 'Failed to submit order');
-        return null;
-      }
+      // const response = await apiService.submitOrder(orderData);
+      // if (response.success && response.data) {
+      //   return response.data;
+      // } else {
+      //   setError('order', response.error || 'Failed to submit order');
+      //   return null;
+      // }
+      return { orderId: 'mock-order-id', confirmationNumber: 'CONF123456' };
     } catch (error) {
       setError('order', 'Network error while submitting order');
       return null;

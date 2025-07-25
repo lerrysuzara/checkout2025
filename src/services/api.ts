@@ -1,197 +1,151 @@
 /**
- * API service layer for external integrations
- * Designed for easy replacement with actual API endpoints
+ * API service for handling external data sources
+ * Includes coreFORCE integration for shopping cart data
  */
 
-import { CartItem, ShippingAddress, PaymentInfo, ApiResponse, OrderSummary } from '../types';
-import { mockCartItems, calculateOrderSummary, simulateApiDelay } from './mockData';
+import { CoreFORCEShoppingCartResponse, CartItem, OrderSummary } from '../types';
+import { mockCoreFORCEShoppingCartResponse } from './mockData';
 
-class CheckoutApiService {
-  private baseUrl: string;
-
-  constructor(baseUrl: string = '') {
-    this.baseUrl = baseUrl;
-  }
-
-  /**
-   * Fetch cart items from external API
-   * In production, this would call your cart API endpoint
-   */
-  async getCartItems(): Promise<ApiResponse<CartItem[]>> {
-    try {
-      await simulateApiDelay(500);
-      
-      // TODO: Replace with actual API call
-      // const response = await fetch(`${this.baseUrl}/api/cart`);
-      // const data = await response.json();
-      
-      return {
-        success: true,
-        data: mockCartItems
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Failed to fetch cart items',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      };
-    }
-  }
-
-  /**
-   * Update cart item quantity
-   */
-  async updateCartItem(itemId: string, quantity: number): Promise<ApiResponse<CartItem[]>> {
-    try {
-      await simulateApiDelay(300);
-      
-      // TODO: Replace with actual API call
-      // const response = await fetch(`${this.baseUrl}/api/cart/${itemId}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ quantity })
-      // });
-      
-      const updatedItems = mockCartItems.map(item => 
-        item.id === itemId ? { ...item, quantity } : item
-      );
-      
-      return {
-        success: true,
-        data: updatedItems
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Failed to update cart item'
-      };
-    }
-  }
-
-  /**
-   * Remove item from cart
-   */
-  async removeCartItem(itemId: string): Promise<ApiResponse<CartItem[]>> {
-    try {
-      await simulateApiDelay(300);
-      
-      // TODO: Replace with actual API call
-      const updatedItems = mockCartItems.filter(item => item.id !== itemId);
-      
-      return {
-        success: true,
-        data: updatedItems
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Failed to remove cart item'
-      };
-    }
-  }
-
-  /**
-   * Validate and save shipping address
-   */
-  async saveShippingAddress(address: ShippingAddress): Promise<ApiResponse<ShippingAddress>> {
-    try {
-      await simulateApiDelay(800);
-      
-      // TODO: Replace with actual API call
-      // const response = await fetch(`${this.baseUrl}/api/shipping`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(address)
-      // });
-      
-      return {
-        success: true,
-        data: address
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Failed to save shipping address'
-      };
-    }
-  }
-
-  /**
-   * Process payment information
-   */
-  async processPayment(paymentInfo: PaymentInfo): Promise<ApiResponse<{ transactionId: string }>> {
-    try {
-      await simulateApiDelay(2000);
-      
-      // TODO: Replace with actual payment processor integration
-      // const response = await fetch(`${this.baseUrl}/api/payment`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(paymentInfo)
-      // });
-      
-      return {
-        success: true,
-        data: { transactionId: `txn_${Date.now()}` }
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Payment processing failed'
-      };
-    }
-  }
-
-  /**
-   * Calculate order totals including shipping and tax
-   */
-  async calculateOrderSummary(items: CartItem[], shippingAddress?: ShippingAddress): Promise<ApiResponse<OrderSummary>> {
-    try {
-      await simulateApiDelay(200);
-      
-      // TODO: Replace with actual calculation API that considers shipping address
-      const summary = calculateOrderSummary(items);
-      
-      return {
-        success: true,
-        data: summary
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Failed to calculate order summary'
-      };
-    }
-  }
-
-  /**
-   * Submit final order
-   */
-  async submitOrder(orderData: {
-    items: CartItem[];
-    shippingAddress: ShippingAddress;
-    paymentInfo: PaymentInfo;
-    summary: OrderSummary;
-  }): Promise<ApiResponse<{ orderId: string; confirmationNumber: string }>> {
-    try {
-      await simulateApiDelay(1500);
-      
-      // TODO: Replace with actual order submission API
-      return {
-        success: true,
-        data: {
-          orderId: `order_${Date.now()}`,
-          confirmationNumber: `CONF${Math.random().toString(36).substr(2, 8).toUpperCase()}`
-        }
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Failed to submit order'
-      };
-    }
+// Global function declaration for coreFORCE integration
+declare global {
+  interface Window {
+    getShoppingCartItems?: () => CoreFORCEShoppingCartResponse;
   }
 }
 
-// Export singleton instance
-export const apiService = new CheckoutApiService();
+/**
+ * Fetches shopping cart data from coreFORCE
+ * This function will be called from the coreFORCE page context
+ */
+export const getCoreFORCEShoppingCart = (): CoreFORCEShoppingCartResponse | null => {
+  try {
+    // Check if we're in a coreFORCE environment
+    if (typeof window !== 'undefined' && window.getShoppingCartItems) {
+      return window.getShoppingCartItems();
+    }
+    
+    // Fallback for development/testing
+    console.warn('getShoppingCartItems not available, using mock data');
+    return mockCoreFORCEShoppingCartResponse;
+  } catch (error) {
+    console.error('Error fetching coreFORCE shopping cart:', error);
+    return null;
+  }
+};
+
+/**
+ * Transforms coreFORCE shopping cart items to our app's format
+ */
+export const transformCoreFORCEItems = (coreFORCEData: CoreFORCEShoppingCartResponse): CartItem[] => {
+  return coreFORCEData.shopping_cart_items.map((item) => ({
+    id: item.shopping_cart_item_id.toString(),
+    name: item.description,
+    price: parseFloat(item.sale_price),
+    quantity: item.quantity,
+    image: item.image_url || item.small_image_url || undefined,
+    description: item.description,
+    // Additional coreFORCE-specific data
+    productId: item.product_id,
+    productCode: item.product_code,
+    unitPrice: parseFloat(item.unit_price),
+    baseCost: parseFloat(item.base_cost),
+    inventoryQuantity: item.inventory_quantity,
+    timeSubmitted: item.time_submitted,
+    // Additional properties from comprehensive data
+    savings: item.savings,
+    discount: item.discount,
+    originalSalePrice: item.original_sale_price,
+    listPrice: item.list_price,
+    upcCode: item.upc_code,
+    manufacturerSku: item.manufacturer_sku,
+    model: item.model,
+    productTagIds: item.product_tag_ids,
+    shippingOptions: item.shipping_options,
+    otherClasses: item.other_classes,
+  }));
+};
+
+/**
+ * Calculates order summary from coreFORCE data
+ */
+export const calculateOrderSummaryFromCoreFORCE = (coreFORCEData: CoreFORCEShoppingCartResponse): OrderSummary => {
+  const subtotal = coreFORCEData.shopping_cart_items.reduce(
+    (sum, item) => sum + (parseFloat(item.sale_price) * item.quantity), 
+    0
+  );
+  
+  const shipping = parseFloat(coreFORCEData.estimated_shipping_charge) || 0;
+  const discount = parseFloat(coreFORCEData.discount_amount) || 0;
+  const tax = (subtotal - discount) * 0.08; // 8% tax rate (adjust as needed)
+  const total = subtotal + shipping + tax - discount;
+
+  return {
+    subtotal: Number(subtotal.toFixed(2)),
+    shipping: Number(shipping.toFixed(2)),
+    tax: Number(tax.toFixed(2)),
+    total: Number(total.toFixed(2)),
+    currency: 'USD',
+    // Additional coreFORCE-specific data
+    discount: Number(discount.toFixed(2)),
+    discountPercent: parseFloat(coreFORCEData.discount_percent) || 0,
+    promotionCode: coreFORCEData.promotion_code,
+    promotionDescription: coreFORCEData.promotion_code_description,
+    loyaltyPoints: coreFORCEData.loyalty_points_awarded,
+    totalSavings: parseFloat(coreFORCEData.total_savings) || 0,
+  } as OrderSummary & {
+    discount: number;
+    discountPercent: number;
+    promotionCode: string;
+    promotionDescription: string;
+    loyaltyPoints: string;
+    totalSavings: number;
+  };
+};
+
+/**
+ * Loads and processes coreFORCE shopping cart data
+ */
+export const loadCoreFORCEShoppingCart = () => {
+  const coreFORCEData = getCoreFORCEShoppingCart();
+  
+  if (!coreFORCEData) {
+    return {
+      items: [],
+      summary: {
+        subtotal: 0,
+        shipping: 0,
+        tax: 0,
+        total: 0,
+        currency: 'USD',
+        discount: 0,
+        discountPercent: 0,
+        promotionCode: '',
+        promotionDescription: '',
+        loyaltyPoints: '',
+        totalSavings: 0,
+      },
+      rawData: null
+    };
+  }
+
+  const items = transformCoreFORCEItems(coreFORCEData);
+  const summary = calculateOrderSummaryFromCoreFORCE(coreFORCEData);
+
+  return {
+    items,
+    summary,
+    rawData: coreFORCEData
+  };
+};
+
+// Legacy API functions for backward compatibility
+export const fetchCartItems = async (): Promise<CartItem[]> => {
+  // This can be used for other API calls if needed
+  throw new Error('Use loadCoreFORCEShoppingCart() for coreFORCE integration');
+};
+
+export const submitOrder = async (orderData: any): Promise<any> => {
+  // Placeholder for order submission
+  console.log('Order submission:', orderData);
+  return { success: true, orderId: 'mock-order-id' };
+};
