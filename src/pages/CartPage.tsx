@@ -82,7 +82,19 @@ const CartPage = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2">
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-md p-6 relative">
+          {/* coreFORCE Integration Link */}
+          <div className="absolute top-4 right-4">
+            <a
+              href="https://lerrysuzara.github.io/checkout2025/coreforce-integration-github-pages.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 hover:text-blue-700 transition-colors"
+            >
+              🔗 coreFORCE Demo
+            </a>
+          </div>
+          
           <h2 className="text-xl font-semibold mb-6">Shopping Cart</h2>
           
           {/* Promotion Code Display */}
