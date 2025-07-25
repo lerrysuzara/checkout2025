@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery-Safe Integration Snippet</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .snippet-container { background: #f8f9fa; padding: 20px; border-radius: 8px; }
+        pre { background: #fff; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 12px; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; border-radius: 4px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="snippet-container">
+        <h2>🔧 jQuery-Safe Integration Snippet</h2>
+        
+        <div class="warning">
+            <strong>⚠️ Important:</strong> This snippet is designed to prevent jQuery conflicts with coreFORCE scripts.
+        </div>
+        
+        <p>Copy this code into your coreFORCE page where you want the React checkout to appear:</p>
+        
+        <pre><code>&lt;!-- jQuery-Safe React Checkout Integration --&gt;
+&lt;div id="react-checkout-root" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 20px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+// jQuery-safe integration for coreFORCE
+(function() {
+    'use strict';
+    
+    // Store original jQuery references BEFORE any other scripts
+    var originalJQuery = window.jQuery;
+    var original$ = window.$;
+    var jqueryRestored = false;
+    
+    // Function to restore jQuery if it gets overwritten
+    function restoreJQuery() {
+        if (!jqueryRestored) {
+            if (originalJQuery && (!window.jQuery || typeof window.jQuery.ajaxSetup !== 'function')) {
+                window.jQuery = originalJQuery;
+                console.log('✅ Restored original jQuery');
+            }
+            if (original$ && (!window.$ || typeof window.$.ajaxSetup !== 'function')) {
+                window.$ = original$;
+                console.log('✅ Restored original $');
+            }
+            jqueryRestored = true;
+        }
+    }
+    
+    // Monitor for jQuery conflicts every second
+    function monitorJQuery() {
+        setInterval(function() {
+            if (window.jQuery && typeof window.jQuery.ajaxSetup !== 'function') {
+                console.warn('⚠️ jQuery conflict detected, restoring...');
+                restoreJQuery();
+            }
+            if (window.$ && typeof window.$.ajaxSetup !== 'function') {
+                console.warn('⚠️ $ conflict detected, restoring...');
+                restoreJQuery();
+            }
+        }, 1000);
+    }
+    
+    // This function should be provided by coreFORCE
+    window.getShoppingCartItems = function() {
+        console.log('🔄 coreFORCE getShoppingCartItems() called');
+        
+        // Return your actual coreFORCE cart data here
+        return {
+            "order_upsell_products": {},
+            "estimated_shipping_charge": "41.95",
+            "total_savings": "79.05",
+            "shipping_required": true,
+            "shopping_cart_items": [
+                {
+                    "shopping_cart_item_id": 1839696,
+                    "product_id": 91957734,
+                    "description": "USED GLOCK 43 PISTOL 9MM 2-6RD MAGS EXCELLENT COND.",
+                    "quantity": 1,
+                    "sale_price": "395.95",
+                    "product_code": "Z4_GHG4938X",
+                    "image_url": "https://range-test.coreware.com/cache/image-full-386986-0755e42dbde8b329cc777d0f5c9c0406.webp",
+                    "discount": "17%",
+                    "savings": "79.05",
+                    "inventory_quantity": 21,
+                    "shipping_options": {
+                        "pickup": false,
+                        "ship_to_store": false,
+                        "ship_to_home": true,
+                        "ship_to_ffl": false
+                    }
+                }
+            ],
+            "promotion_code": "OVER100",
+            "promotion_code_description": "Over 100 Discount",
+            "discount_percent": "20.00",
+            "loyalty_points_awarded": "This purchase will add 10 loyalty points to your account."
+        };
+    };
+
+    // Load React app with jQuery protection
+    function loadReactApp() {
+        try {
+            // Load CSS first
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://lerrysuzara.github.io/checkout2025/assets/index-449700de.css';
+            link.onload = function() {
+                console.log('✅ CSS loaded');
+                
+                // Load JS after CSS
+                var script = document.createElement('script');
+                script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index-3b19ec32.js';
+                script.onload = function() {
+                    console.log('✅ React checkout app loaded successfully');
+                    
+                    // Start monitoring for jQuery conflicts
+                    monitorJQuery();
+                };
+                script.onerror = function() {
+                    console.error('❌ Failed to load React app');
+                };
+                document.head.appendChild(script);
+            };
+            link.onerror = function() {
+                console.error('❌ Failed to load CSS');
+            };
+            document.head.appendChild(link);
+            
+        } catch (error) {
+            console.error('Error loading React app:', error);
+        }
+    }
+    
+    // Load when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadReactApp);
+    } else {
+        loadReactApp();
+    }
+    
+    // Also restore jQuery on window load
+    window.addEventListener('load', function() {
+        setTimeout(restoreJQuery, 100);
+    });
+    
+    // Export restore function for manual use if needed
+    window.restoreCoreFORCEjQuery = restoreJQuery;
+    
+    console.log('🚀 jQuery-safe integration initialized');
+})();
+&lt;/script&gt;</code></pre>
+        
+        <h3>🔧 How it works:</h3>
+        <ul>
+            <li><strong>jQuery Preservation:</strong> Stores original jQuery before any conflicts</li>
+            <li><strong>Continuous Monitoring:</strong> Checks for jQuery conflicts every second</li>
+            <li><strong>Automatic Restoration:</strong> Restores jQuery when conflicts are detected</li>
+            <li><strong>Manual Override:</strong> Call <code>window.restoreCoreFORCEjQuery()</code> if needed</li>
+        </ul>
+        
+        <h3>📋 Instructions:</h3>
+        <ol>
+            <li>Copy the code snippet above</li>
+            <li>Paste it into your coreFORCE page where you want the checkout</li>
+            <li>Replace the mock data with your actual coreFORCE cart data</li>
+            <li>The React app will load automatically with jQuery protection</li>
+        </ol>
+        
+        <h3>🔍 Troubleshooting:</h3>
+        <ul>
+            <li>If you still see jQuery errors, try calling <code>window.restoreCoreFORCEjQuery()</code> in the console</li>
+            <li>Check the browser console for status messages</li>
+            <li>Make sure the snippet is placed before any coreFORCE scripts that use jQuery</li>
+        </ul>
+    </div>
+</body>
+</html> 
