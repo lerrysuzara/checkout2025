@@ -8,12 +8,8 @@ export function transformCoreFORCECartData(coreforceData: CoreFORCEShoppingCartR
 
   // Transform cart items
   const items: CartItem[] = coreforceData.shopping_cart_items.map((item, index) => {
-    // Calculate full image URL if it's a relative path
+    // Use image URL as-is (relative paths will work in the same domain)
     let imageUrl = item.image_url
-    if (imageUrl && imageUrl.startsWith('/')) {
-      // Assuming the base URL is the same domain as coreFORCE
-      imageUrl = `https://range-test.coreware.com${imageUrl}`
-    }
 
     return {
       id: item.shopping_cart_item_id.toString(),

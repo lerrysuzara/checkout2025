@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>coreFORCE Minimal Snippet</title>
+</head>
+<body>
+    <!-- Add this container where you want the React checkout app to appear -->
+    <div id="react-checkout-root"></div>
+
+    <!-- Copy this script section to your coreFORCE page -->
+    <script>
+        // ========================================
+        // coreFORCE Checkout Integration Snippet
+        // ========================================
+        
+        // Store original jQuery references to prevent conflicts
+        var originalJQuery = window.jQuery;
+        var original$ = window.$;
+        
+        // Load React checkout app
+        function loadCheckoutApp() {
+            // Load CSS
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://lerrysuzara.github.io/checkout2025/assets/index-b7712f17.css';
+            document.head.appendChild(link);
+            
+            // Load JS
+            var script = document.createElement('script');
+            script.type = 'module';
+            script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index-c478256f.js';
+            document.head.appendChild(script);
+        }
+        
+        // Function to load cart data from coreFORCE
+        function loadCartFromCoreFORCE() {
+            // Replace this with your actual coreFORCE cart data function
+            var cartData = window.getShoppingCartItems ? window.getShoppingCartItems() : null;
+            
+            if (cartData && window.updateCartData) {
+                window.updateCartData(cartData);
+                console.log('✅ Cart data loaded from coreFORCE');
+            } else {
+                console.log('❌ Cart data or updateCartData function not available');
+            }
+        }
+        
+        // Restore jQuery if needed
+        function restoreJQuery() {
+            if (originalJQuery && (!window.jQuery || typeof window.jQuery.ajaxSetup !== 'function')) {
+                window.jQuery = originalJQuery;
+            }
+            if (original$ && (!window.$ || typeof window.$.ajaxSetup !== 'function')) {
+                window.$ = original$;
+            }
+        }
+        
+        // Initialize
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadCheckoutApp);
+        } else {
+            loadCheckoutApp();
+        }
+        
+        // Monitor for jQuery conflicts
+        setInterval(restoreJQuery, 1000);
+        
+        // Expose function globally for coreFORCE to call
+        window.loadCartFromCoreFORCE = loadCartFromCoreFORCE;
+        
+        console.log('🚀 coreFORCE checkout snippet loaded');
+    </script>
+</body>
+</html> 
