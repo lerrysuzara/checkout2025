@@ -1,0 +1,15 @@
+<svg width="266" height="142" viewBox="0 0 266 142" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Credit card background -->
+  <rect x="0" y="0" width="266" height="142" rx="12" fill="#F5F5F5"/>
+  
+  <!-- Orange stripe -->
+  <rect x="0" y="0" width="266" height="28" rx="12" fill="#FF6B35"/>
+  
+  <!-- Signature strip placeholder -->
+  <rect x="20" y="100" width="80" height="4" rx="2" fill="#666666"/>
+  
+  <!-- Mastercard-style circles -->
+  <circle cx="220" cy="80" r="25" fill="#FF6B35"/>
+  <circle cx="240" cy="80" r="25" fill="#FF6B35"/>
+  <circle cx="230" cy="80" r="20" fill="#E55A2B"/>
+</svg> 

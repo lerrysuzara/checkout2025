@@ -12,13 +12,26 @@ app.use(express.json());
 // Proxy endpoint for FFL dealer search
 app.get('/api/ffl-dealers', async (req, res) => {
   try {
-    const { zipcode, businessName, page = 1, per_page = 10 } = req.query;
+    console.log('📥 Received request with query parameters:', req.query);
+    
+    // Handle nested filter object structure
+    const zipcode = req.query.filter?.premise_zipcode || req.query['filter[premise_zipcode]'];
+    const businessName = req.query.filter?.business_name || req.query['filter[business_name]'];
+    const page = req.query.page || 1;
+    const per_page = req.query.per_page || 10;
+    
+    console.log('🔍 Extracted parameters:');
+    console.log('   zipcode:', zipcode);
+    console.log('   businessName:', businessName);
+    console.log('   page:', page);
+    console.log('   per_page:', per_page);
     
     const bfgApiKey = '968|R3llgpPGIkvkgyqHb60YqcgKCslJslN1hDNkxcTP65fa716b';
     
     const queryParams = new URLSearchParams();
-    queryParams.set('per_page', per_page.toString());
+    queryParams.set('page_size', per_page.toString());
     queryParams.set('page', page.toString());
+    queryParams.set('include', 'company');
 
     if (zipcode) {
       queryParams.set('filter[premise_zipcode]', zipcode);
@@ -31,7 +44,15 @@ app.get('/api/ffl-dealers', async (req, res) => {
     }
 
     const bfgUrl = `https://api-sandbox.buyingfreedom.app/api/ffls?${queryParams.toString()}`;
-    console.log('Fetching from BFG API:', bfgUrl);
+    console.log('🌐 Making request to BFG API:');
+    console.log('   URL:', bfgUrl);
+    console.log('   Method: GET');
+    console.log('   Headers:', {
+      'Authorization': `Bearer ${bfgApiKey.substring(0, 10)}...`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+    console.log('   Query Parameters:', Object.fromEntries(queryParams.entries()));
 
     const response = await fetch(bfgUrl, {
       method: 'GET',
@@ -53,7 +74,16 @@ app.get('/api/ffl-dealers', async (req, res) => {
     }
 
     const bfgData = await response.json();
-    console.log(`Received ${bfgData.data.length} FFL dealers from BFG API`);
+    console.log(`📥 Received response from BFG API:`);
+    console.log(`   Status: ${response.status} ${response.statusText}`);
+    console.log(`   Data count: ${bfgData.data.length} FFL dealers`);
+    console.log(`   Response structure:`, {
+      hasData: !!bfgData.data,
+      dataType: Array.isArray(bfgData.data) ? 'array' : typeof bfgData.data,
+      dataLength: bfgData.data?.length || 0,
+      hasLinks: !!bfgData.links,
+      hasMeta: !!bfgData.meta
+    });
     
     res.json(bfgData);
   } catch (error) {

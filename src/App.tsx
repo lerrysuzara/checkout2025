@@ -1,14 +1,67 @@
 import React, { useState, useEffect } from 'react'
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import ShoppingCartPage from './pages/ShoppingCartPage'
+import CheckoutPage from './pages/CheckoutPage'
+import LoginPage from './pages/LoginPage'
 import CartPage from './pages/CartPage'
 import ShippingPage from './pages/ShippingPage'
+import ShippingPaymentPage from './pages/ShippingPaymentPage'
 import PaymentPage from './pages/PaymentPage'
 import ReviewPage from './pages/ReviewPage'
 import { transformCoreFORCECartData, validateCoreFORCECartData } from './utils/coreforceTransformer'
+import { mockCoreFORCEShoppingCartResponse, mockCartItems, calculateOrderSummary } from './services/mockData'
+
+// Extend Window interface to include our custom functions
+declare global {
+  interface Window {
+    updateCartData?: (data: any) => void;
+    loadMockData?: () => void;
+    loadCoreFORCEMockData?: () => void;
+    isReactAppReady?: () => boolean;
+  }
+}
 
 function App() {
   // Global state for cart data
   const [globalCartData, setGlobalCartData] = useState<any>(null)
+
+  // Function to load mock data
+  const loadMockData = () => {
+    console.log('🔄 Loading simple mock data...')
+    
+    // Use simple mock cart items
+    const mockData = {
+      items: mockCartItems,
+      summary: calculateOrderSummary(mockCartItems),
+      rawData: null
+    }
+    
+    setGlobalCartData(mockData)
+    
+    // Dispatch event for components listening
+    const event = new CustomEvent('cartDataUpdated', { detail: mockData })
+    window.dispatchEvent(event)
+    
+    console.log('✅ Simple mock data loaded:', mockData)
+  }
+
+  // Function to load coreFORCE mock data
+  const loadCoreFORCEMockData = () => {
+    console.log('🔄 Loading coreFORCE mock data...')
+    
+    if (validateCoreFORCECartData(mockCoreFORCEShoppingCartResponse)) {
+      const transformedData = transformCoreFORCECartData(mockCoreFORCEShoppingCartResponse)
+      setGlobalCartData(transformedData)
+      
+      // Dispatch event for components listening
+      const event = new CustomEvent('cartDataUpdated', { detail: transformedData })
+      window.dispatchEvent(event)
+      
+      console.log('✅ CoreFORCE mock data loaded:', transformedData)
+    } else {
+      console.error('❌ Invalid coreFORCE mock data')
+    }
+  }
 
   useEffect(() => {
     // Expose global function immediately when App loads
@@ -34,12 +87,22 @@ function App() {
       }
     }
 
+    // Expose mock data loading functions
+    ;(window as any).loadMockData = loadMockData
+    ;(window as any).loadCoreFORCEMockData = loadCoreFORCEMockData
+
     // Also expose a function to check if the app is ready
     ;(window as any).isReactAppReady = () => {
       return typeof (window as any).updateCartData === 'function'
     }
 
     console.log('🚀 React App initialized - updateCartData function exposed')
+    console.log('🧪 Mock data functions available: loadMockData(), loadCoreFORCEMockData()')
+    
+    // Load coreFORCE mock data by default for testing
+    setTimeout(() => {
+      loadCoreFORCEMockData()
+    }, 100)
     
     // Listen for messages from parent window (if in iframe)
     const handleMessage = (event: MessageEvent) => {
@@ -53,6 +116,8 @@ function App() {
     
     return () => {
       ;(window as any).updateCartData = undefined
+      ;(window as any).loadMockData = undefined
+      ;(window as any).loadCoreFORCEMockData = undefined
       ;(window as any).isReactAppReady = undefined
       window.removeEventListener('message', handleMessage)
     }
@@ -73,10 +138,15 @@ function App() {
 
                            <Routes>
                    <Route path="/" element={<Navigate to="/cart" replace />} />
-                   <Route path="/cart" element={<CartPage globalCartData={globalCartData} />} />
+                   <Route path="/cart" element={<ShoppingCartPage globalCartData={globalCartData} />} />
+                   <Route path="/checkout" element={<CheckoutPage globalCartData={globalCartData} />} />
+                   <Route path="/login" element={<LoginPage />} />
                    <Route path="/shipping" element={<ShippingPage globalCartData={globalCartData} />} />
+                   <Route path="/shipping-payment" element={<ShippingPaymentPage globalCartData={globalCartData} />} />
                    <Route path="/payment" element={<PaymentPage />} />
-                   <Route path="/review" element={<ReviewPage />} />
+                   <Route path="/review" element={<ReviewPage globalCartData={globalCartData} />} />
+                   {/* Legacy route for backward compatibility */}
+                   <Route path="/cart-old" element={<CartPage globalCartData={globalCartData} />} />
                  </Routes>
         </div>
       </div>

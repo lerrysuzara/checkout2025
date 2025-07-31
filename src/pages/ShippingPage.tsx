@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CartItem, OrderSummary } from '../types'
+import ProductImage from '../components/common/ProductImage'
 
 interface ShippingPageProps {
   globalCartData?: any;

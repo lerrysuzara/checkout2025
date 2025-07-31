@@ -146,7 +146,7 @@ export const mockCoreFORCEShoppingCartResponse: CoreFORCEShoppingCartResponse = 
   "promotion_code": "",
   "promotion_code_description": "",
   "promotion_code_details": "",
-  "discount_amount": "0",
+  "discount_amount": "",
   "discount_percent": "0",
   "shopping_cart_item_count": 2,
   "loyalty_points_awarded": "This purchase will add 120 loyalty points to your account. Add $202.22 in product to this order to jump to the next level.",
@@ -301,7 +301,8 @@ export const calculateOrderSummary = (items: CartItem[]): OrderSummary => {
     shipping: Number(shipping.toFixed(2)),
     tax: Number(tax.toFixed(2)),
     total: Number(total.toFixed(2)),
-    currency: 'USD'
+    currency: 'USD',
+    discount: null
   };
 };
 

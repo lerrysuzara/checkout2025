@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { loadCoreFORCEShoppingCart } from '../services/api'
 import { CartItem, OrderSummary } from '../types'
+import ProductImage from '../components/common/ProductImage'
 
 // Extend Window interface to include our custom functions
 declare global {
   interface Window {
     updateCartData?: (data: any) => void;
+    loadMockData?: () => void;
+    loadCoreFORCEMockData?: () => void;
   }
 }
 
@@ -159,6 +162,26 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
           <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
           <p className="text-gray-600 mb-4">No items found in your shopping cart.</p>
           <p className="text-sm text-gray-500 mb-4">Debug: cartData = {JSON.stringify(cartData)}</p>
+          
+          {/* Mock Data Loading Buttons */}
+          <div className="space-y-3 mb-6">
+            <p className="text-sm text-gray-500">Load test data:</p>
+            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <button 
+                onClick={() => (window as any).loadMockData?.()}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
+              >
+                Load Simple Mock Data
+              </button>
+              <button 
+                onClick={() => (window as any).loadCoreFORCEMockData?.()}
+                className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm"
+              >
+                Load CoreFORCE Mock Data
+              </button>
+            </div>
+          </div>
+          
           <button 
             onClick={() => window.history.back()} 
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -206,25 +229,17 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
           <div className="space-y-4">
             {items.map((item) => (
               <div key={item.id} className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 py-4 border-b">
-                <div className="w-16 h-16 bg-gray-200 rounded flex-shrink-0 flex items-center justify-center">
-                  {item.image ? (
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-full object-contain rounded"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden')
-                      }}
-                    />
-                  ) : null}
-                  <div className={`w-full h-full flex items-center justify-center text-gray-500 text-xs text-center ${item.image ? 'hidden' : ''}`}>
-                    <div>
+                <ProductImage
+                  src={item.image}
+                  alt={item.name}
+                  size="md"
+                  fallbackIcon={
+                    <div className="text-center">
                       <div className="text-2xl mb-1">📦</div>
-                      <div>Product</div>
+                      <div className="text-xs text-gray-500">Product</div>
                     </div>
-                  </div>
-                </div>
+                  }
+                />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-sm sm:text-base">{item.name}</h3>
                   <p className="text-gray-600 text-sm">${item.price.toFixed(2)}</p>

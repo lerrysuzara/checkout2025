@@ -99,6 +99,24 @@ The shipping page automatically shows only valid shipping options based on the c
 
 In development mode, the app uses mock data that simulates the coreFORCE response structure. You can see this data in `src/services/mockData.ts`.
 
+### Google Places API Setup
+
+The address autocomplete feature uses Google Places API. To enable this feature:
+
+1. **Get a Google API Key:**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select an existing one
+   - Enable the "Places API" and "Maps JavaScript API"
+   - Create credentials (API Key)
+
+2. **Update the API Key:**
+   - Replace `YOUR_GOOGLE_API_KEY` in `index.html` with your actual API key
+   - For production, consider using environment variables
+
+3. **API Key Restrictions (Recommended):**
+   - Restrict the API key to your domain
+   - Enable only the necessary APIs (Places API, Maps JavaScript API)
+
 ## 🚀 Production Build
 
 ### Build for Production

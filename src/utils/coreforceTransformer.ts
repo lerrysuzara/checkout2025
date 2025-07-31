@@ -41,14 +41,14 @@ export function transformCoreFORCECartData(coreforceData: CoreFORCEShoppingCartR
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const shipping = parseFloat(coreforceData.estimated_shipping_charge) || 0
-  const discount = parseFloat(coreforceData.discount_amount) || 0
+  const discount = coreforceData.discount_amount ? parseFloat(coreforceData.discount_amount) : null
   const discountPercent = parseFloat(coreforceData.discount_percent) || 0
   const totalSavings = parseFloat(coreforceData.total_savings) || 0
   
   // Estimate tax (you may want to calculate this based on your business logic)
   const estimatedTax = subtotal * 0.08 // 8% tax rate as example
   
-  const total = subtotal + shipping + estimatedTax - discount
+  const total = subtotal + shipping + estimatedTax - (discount || 0)
 
   // Transform order summary
   const summary: OrderSummary = {
