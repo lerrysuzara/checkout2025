@@ -156,10 +156,7 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
   if (!cartData || cartData.items.length === 0) {
     // Detect if app is embedded
     const isEmbedded = () => {
-      return window.parent !== window || 
-             window.location.href.includes('embedded') ||
-             window.location.href.includes('iframe') ||
-             document.referrer !== '';
+      return !window.location.href.startsWith('http://localhost/');
     }
 
     console.log('🛒 Cart is empty. cartData:', cartData, 'items length:', cartData?.items?.length)

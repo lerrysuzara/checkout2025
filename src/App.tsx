@@ -27,10 +27,7 @@ function App() {
   
   // Detect if app is embedded (not standalone)
   const isEmbedded = () => {
-    return window.parent !== window || 
-           window.location.href.includes('embedded') ||
-           window.location.href.includes('iframe') ||
-           document.referrer !== '';
+    return !window.location.href.startsWith('http://localhost/');
   }
 
   // Function to load mock data (only in standalone mode)

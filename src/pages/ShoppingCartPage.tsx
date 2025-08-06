@@ -28,10 +28,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
   useEffect(() => {
     // Detect if app is embedded
     const isEmbedded = () => {
-      return window.parent !== window || 
-             window.location.href.includes('embedded') ||
-             window.location.href.includes('iframe') ||
-             document.referrer !== '';
+      return !window.location.href.startsWith('http://localhost/');
     }
 
     // Load mock data if no cart data is provided (only in standalone mode)
