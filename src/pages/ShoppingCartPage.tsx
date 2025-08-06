@@ -36,9 +36,11 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
       console.log('🛒 Using provided cart data:', globalCartData)
       setCartItems(globalCartData.items)
       setOrderSummary(globalCartData.summary)
+      setLoading(false)
     } else if (isEmbedded()) {
-      console.log('🚫 Embedded mode: No mock data loading')
-      // Keep empty cart state when embedded
+      console.log('🚫 Embedded mode: Waiting for cart data from coreFORCE')
+      // Keep loading state when embedded until we get real data
+      // Don't set loading to false here
     } else {
       console.log('🛒 Loading coreFORCE mock shopping cart data...')
       
@@ -50,8 +52,8 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
       } else {
         console.error('❌ Invalid coreFORCE mock data structure')
       }
+      setLoading(false)
     }
-    setLoading(false)
   }, [globalCartData])
 
   // Auto-apply promo code from URL parameters
