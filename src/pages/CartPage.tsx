@@ -223,69 +223,67 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
           
           <div className="space-y-4">
             {items.map((item) => (
-              <div key={item.id} className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 py-4 border-b">
-                <ProductImage
-                  src={item.image}
-                  alt={item.name}
-                  size="md"
-                  fallbackIcon={
-                    <div className="text-center">
-                      <div className="text-2xl mb-1">📦</div>
-                      <div className="text-xs text-gray-500">Product</div>
-                    </div>
-                  }
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm sm:text-base">{item.name}</h3>
-                  
-                  {/* Price Display */}
-                  <div className="mt-1">
-                    {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
-                      <div className="flex items-center space-x-2">
-                        <span className="text-gray-400 text-sm line-through">
-                          ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
-                        </span>
-                        <span className="text-gray-900 text-sm font-medium">
-                          ${item.price.toFixed(2)}
-                        </span>
-                        {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
-                          <span className="text-green-600 text-xs font-medium">
-                            Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+              <div key={item.id} className="border-b border-gray-200 py-4">
+                <div className="flex items-start space-x-4">
+                  <ProductImage
+                    src={item.image}
+                    alt={item.name}
+                    size="md"
+                    fallbackIcon={
+                      <div className="text-center">
+                        <div className="text-2xl mb-1">📦</div>
+                        <div className="text-xs text-gray-500">Product</div>
+                      </div>
+                    }
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-sm sm:text-base">{item.name}</h3>
+                    
+                    {/* Price Display */}
+                    <div className="mt-1">
+                      {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                        <div className="flex items-center space-x-2">
+                          <span className="text-gray-400 text-sm line-through">
+                            ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
                           </span>
+                          <span className="text-gray-900 text-sm font-medium">
+                            ${item.price.toFixed(2)}
+                          </span>
+                          {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                            <span className="text-green-600 text-xs font-medium">
+                              Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="text-gray-600 text-sm">${item.price.toFixed(2)}</p>
+                      )}
+                    </div>
+                    
+                    {(item.productCode || item.inventoryQuantity !== undefined) && (
+                      <div className="flex items-center space-x-2 mt-1">
+                        {item.productCode && (
+                          <p className="text-gray-500 text-xs">SKU: {item.productCode}</p>
+                        )}
+                        {item.inventoryQuantity !== undefined && (
+                          <p className="text-gray-500 text-xs">
+                            In Stock: {item.inventoryQuantity}
+                          </p>
                         )}
                       </div>
-                    ) : (
-                      <p className="text-gray-600 text-sm">${item.price.toFixed(2)}</p>
+                    )}
+                    {item.shippingOptions?.ship_to_ffl && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mt-1">
+                        FFL Required
+                      </span>
                     )}
                   </div>
-                  
-                  {(item.productCode || item.inventoryQuantity !== undefined) && (
-                    <div className="flex items-center space-x-2 mt-1">
-                      {item.productCode && (
-                        <p className="text-gray-500 text-xs">SKU: {item.productCode}</p>
-                      )}
-                      {item.inventoryQuantity !== undefined && (
-                        <p className="text-gray-500 text-xs">
-                          In Stock: {item.inventoryQuantity}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  {item.shippingOptions?.ship_to_ffl && (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mt-1">
-                      FFL Required
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between sm:justify-start sm:space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-600">Qty: {item.quantity}</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
+                  <div className="flex flex-col items-end space-y-2">
                     <div className="text-right">
                       <p className="font-medium text-sm sm:text-base">
                         ${(item.price * item.quantity).toFixed(2)}
                       </p>
+                      <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                     </div>
                     <button
                       onClick={() => removeItemFromCart(item.id)}
@@ -293,7 +291,7 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
                       title="Remove item"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     </button>
                   </div>
