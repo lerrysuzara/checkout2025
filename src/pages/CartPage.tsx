@@ -241,35 +241,45 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
                   }
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-2">
-                    <h3 className="font-medium text-sm sm:text-base">{item.name}</h3>
-                    {item.shippingOptions?.ship_to_ffl && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                        FFL Required
-                      </span>
+                  <h3 className="font-medium text-sm sm:text-base">{item.name}</h3>
+                  
+                  {/* Price Display */}
+                  <div className="mt-1">
+                    {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-gray-400 text-sm line-through">
+                          ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
+                        </span>
+                        <span className="text-gray-900 text-sm font-medium">
+                          ${item.price.toFixed(2)}
+                        </span>
+                        {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                          <span className="text-green-600 text-xs font-medium">
+                            Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-gray-600 text-sm">${item.price.toFixed(2)}</p>
                     )}
                   </div>
-                  <p className="text-gray-600 text-sm">${item.price.toFixed(2)}</p>
-                  {item.productCode && (
-                    <p className="text-gray-500 text-xs">SKU: {item.productCode}</p>
-                  )}
-                  {item.inventoryQuantity !== undefined && (
-                    <p className="text-gray-500 text-xs">
-                      In Stock: {item.inventoryQuantity}
-                    </p>
-                  )}
-                  {/* Show discount/savings if available */}
-                  {item.savings && parseFloat(item.savings) > 0 && (
-                    <div className="mt-1">
-                      <span className="text-green-600 text-xs font-medium">
-                        Save ${parseFloat(item.savings).toFixed(2)}
-                      </span>
-                      {item.discount && (
-                        <span className="text-green-600 text-xs ml-2">
-                          ({item.discount} off)
-                        </span>
+                  
+                  {(item.productCode || item.inventoryQuantity !== undefined) && (
+                    <div className="flex items-center space-x-2 mt-1">
+                      {item.productCode && (
+                        <p className="text-gray-500 text-xs">SKU: {item.productCode}</p>
+                      )}
+                      {item.inventoryQuantity !== undefined && (
+                        <p className="text-gray-500 text-xs">
+                          In Stock: {item.inventoryQuantity}
+                        </p>
                       )}
                     </div>
+                  )}
+                  {item.shippingOptions?.ship_to_ffl && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mt-1">
+                      FFL Required
+                    </span>
                   )}
                 </div>
                 <div className="flex items-center justify-between sm:justify-start sm:space-x-4">

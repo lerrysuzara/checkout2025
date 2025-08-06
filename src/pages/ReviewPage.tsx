@@ -182,21 +182,38 @@ const ReviewPage = ({ globalCartData }: ReviewPageProps) => {
                     className="w-16 h-16 object-cover rounded"
                   />
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2">
-                      <h3 className="font-medium">{item.name}</h3>
-                      {item.shippingOptions?.ship_to_ffl && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                          FFL Required
-                        </span>
-                      )}
-                    </div>
+                    <h3 className="font-medium">{item.name}</h3>
                     <p className="text-gray-600">Quantity: {item.quantity}</p>
                     {item.productCode && (
-                      <p className="text-xs text-gray-500">SKU: {item.productCode}</p>
+                      <p className="text-xs text-gray-500 mt-1">SKU: {item.productCode}</p>
+                    )}
+                    {item.shippingOptions?.ship_to_ffl && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mt-1">
+                        FFL Required
+                      </span>
                     )}
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                    {/* Price Display */}
+                    {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                      <div className="flex flex-col items-end space-y-1">
+                        <div className="flex items-center space-x-1">
+                          <span className="text-gray-400 text-xs line-through">
+                            ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
+                          </span>
+                          <span className="text-gray-900 font-medium">
+                            ${item.price.toFixed(2)}
+                          </span>
+                        </div>
+                        {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                          <span className="text-green-600 text-xs">
+                            Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                    )}
                   </div>
                 </div>
               )
@@ -293,7 +310,26 @@ const ReviewPage = ({ globalCartData }: ReviewPageProps) => {
                   <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                 </div>
                 <div className="text-sm font-medium text-gray-900">
-                  ${(item.price * item.quantity).toFixed(2)}
+                  {/* Price Display */}
+                  {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                    <div className="flex flex-col items-end space-y-1">
+                      <div className="flex items-center space-x-1">
+                        <span className="text-gray-400 text-xs line-through">
+                          ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
+                        </span>
+                        <span className="text-gray-900 text-sm font-medium">
+                          ${item.price.toFixed(2)}
+                        </span>
+                      </div>
+                      {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                        <span className="text-green-600 text-xs">
+                          Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  )}
                 </div>
               </div>
             ))}

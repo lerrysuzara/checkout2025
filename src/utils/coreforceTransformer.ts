@@ -1,6 +1,16 @@
 import { CartItem, OrderSummary, CoreFORCEShoppingCartResponse } from '../types'
 
 /**
+ * Helper function to parse comma-separated numbers properly
+ * Handles strings like "1,760.40" and converts them to 1760.40
+ */
+function parseCommaSeparatedNumber(value: string): number {
+  if (!value) return 0
+  // Remove commas and parse as float
+  return parseFloat(value.replace(/,/g, ''))
+}
+
+/**
  * Transforms coreFORCE shopping cart data to the format expected by the React app
  */
 export function transformCoreFORCECartData(coreforceData: CoreFORCEShoppingCartResponse) {
@@ -14,15 +24,15 @@ export function transformCoreFORCECartData(coreforceData: CoreFORCEShoppingCartR
     return {
       id: item.shopping_cart_item_id.toString(),
       name: item.description,
-      price: parseFloat(item.sale_price),
+      price: parseCommaSeparatedNumber(item.sale_price),
       quantity: item.quantity,
       image: imageUrl,
       description: item.description,
       // CoreFORCE-specific properties
       productId: item.product_id,
       productCode: item.product_code,
-      unitPrice: parseFloat(item.unit_price),
-      baseCost: parseFloat(item.base_cost),
+      unitPrice: parseCommaSeparatedNumber(item.unit_price),
+      baseCost: parseCommaSeparatedNumber(item.base_cost),
       inventoryQuantity: item.inventory_quantity,
       timeSubmitted: item.time_submitted,
       savings: item.savings,
@@ -40,10 +50,10 @@ export function transformCoreFORCECartData(coreforceData: CoreFORCEShoppingCartR
 
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-  const shipping = parseFloat(coreforceData.estimated_shipping_charge) || 0
-  const discount = coreforceData.discount_amount ? parseFloat(coreforceData.discount_amount) : null
+  const shipping = parseCommaSeparatedNumber(coreforceData.estimated_shipping_charge) || 0
+  const discount = coreforceData.discount_amount ? parseCommaSeparatedNumber(coreforceData.discount_amount) : null
   const discountPercent = parseFloat(coreforceData.discount_percent) || 0
-  const totalSavings = parseFloat(coreforceData.total_savings) || 0
+  const totalSavings = parseCommaSeparatedNumber(coreforceData.total_savings) || 0
   
   // Estimate tax (you may want to calculate this based on your business logic)
   const estimatedTax = subtotal * 0.08 // 8% tax rate as example

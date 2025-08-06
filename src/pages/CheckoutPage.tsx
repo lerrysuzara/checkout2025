@@ -653,7 +653,26 @@ const CheckoutPage = ({ globalCartData }: CheckoutPageProps) => {
                         <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                       </div>
                       <div className="text-sm font-medium text-gray-900">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {/* Price Display */}
+                        {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                          <div className="flex flex-col items-end space-y-1">
+                            <div className="flex items-center space-x-1">
+                              <span className="text-gray-400 text-xs line-through">
+                                ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
+                              </span>
+                              <span className="text-gray-900 text-sm font-medium">
+                                ${item.price.toFixed(2)}
+                              </span>
+                            </div>
+                            {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                              <span className="text-green-600 text-xs">
+                                Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span>${(item.price * item.quantity).toFixed(2)}</span>
+                        )}
                       </div>
                     </div>
                   ))}

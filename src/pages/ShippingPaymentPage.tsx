@@ -158,8 +158,45 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
     }
   }, [cartData])
 
-  // Initialize Google Places services with retry logic
+  // Initialize Google Places services with retry logic and dynamic script loading
   useEffect(() => {
+    const loadGoogleMapsScript = () => {
+      return new Promise<void>((resolve, reject) => {
+        // Check if script is already loaded
+        if ((window as any).google && (window as any).google.maps) {
+          resolve()
+          return
+        }
+
+        // Check if script tag already exists
+        const existingScript = document.querySelector('script[src*="maps.googleapis.com"]')
+        if (existingScript) {
+          // Wait for existing script to load
+          existingScript.addEventListener('load', () => resolve())
+          existingScript.addEventListener('error', () => reject(new Error('Failed to load Google Maps')))
+          return
+        }
+
+        // Create and load script
+        const script = document.createElement('script')
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBdKc4j18PKX34PiqZ5pNxUke2Umgb4JJM&libraries=places'
+        script.async = true
+        script.defer = true
+        
+        script.addEventListener('load', () => {
+          console.log('🗺️ Google Maps script loaded successfully')
+          resolve()
+        })
+        
+        script.addEventListener('error', () => {
+          console.error('❌ Failed to load Google Maps script')
+          reject(new Error('Failed to load Google Maps'))
+        })
+        
+        document.head.appendChild(script)
+      })
+    }
+
     const initializeGooglePlaces = () => {
       const google = (window as any).google
       if (google && google.maps && google.maps.places) {
@@ -182,21 +219,32 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
       }
     }
 
-    // Try to initialize immediately
-    if (!initializeGooglePlaces()) {
-      // If not available, retry every 500ms for up to 10 seconds
-      let retryCount = 0
-      const maxRetries = 20
-      const retryInterval = setInterval(() => {
-        retryCount++
-        if (initializeGooglePlaces()) {
-          clearInterval(retryInterval)
-        } else if (retryCount >= maxRetries) {
-          clearInterval(retryInterval)
-          console.error('❌ Failed to initialize Google Places after 10 seconds')
+    const initializeWithRetry = async () => {
+      try {
+        // First, ensure Google Maps script is loaded
+        await loadGoogleMapsScript()
+        
+        // Then try to initialize Places services
+        if (!initializeGooglePlaces()) {
+          // If not available, retry every 500ms for up to 10 seconds
+          let retryCount = 0
+          const maxRetries = 20
+          const retryInterval = setInterval(() => {
+            retryCount++
+            if (initializeGooglePlaces()) {
+              clearInterval(retryInterval)
+            } else if (retryCount >= maxRetries) {
+              clearInterval(retryInterval)
+              console.error('❌ Failed to initialize Google Places after 10 seconds')
+            }
+          }, 500)
         }
-      }, 500)
+      } catch (error) {
+        console.error('❌ Failed to load Google Maps script:', error)
+      }
     }
+
+    initializeWithRetry()
   }, [])
 
   // Auto-populate shipping form with user data from checkout page
@@ -2170,7 +2218,26 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
                         <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                       </div>
                       <div className="text-sm font-medium text-gray-900">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {/* Price Display */}
+                        {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                          <div className="flex flex-col items-end space-y-1">
+                            <div className="flex items-center space-x-1">
+                              <span className="text-gray-400 text-xs line-through">
+                                ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
+                              </span>
+                              <span className="text-gray-900 text-sm font-medium">
+                                ${item.price.toFixed(2)}
+                              </span>
+                            </div>
+                            {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                              <span className="text-green-600 text-xs">
+                                Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span>${(item.price * item.quantity).toFixed(2)}</span>
+                        )}
                       </div>
                     </div>
                   )

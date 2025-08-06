@@ -3,8 +3,18 @@
  * Includes coreFORCE integration for shopping cart data
  */
 
-import { CoreFORCEShoppingCartResponse, CartItem, OrderSummary } from '../types';
+import { CartItem, OrderSummary, CoreFORCEShoppingCartResponse } from '../types';
 import { mockCoreFORCEShoppingCartResponse } from './mockData';
+
+/**
+ * Helper function to parse comma-separated numbers properly
+ * Handles strings like "1,760.40" and converts them to 1760.40
+ */
+function parseCommaSeparatedNumber(value: string): number {
+  if (!value) return 0
+  // Remove commas and parse as float
+  return parseFloat(value.replace(/,/g, ''))
+}
 
 // Global function declaration for coreFORCE integration
 declare global {
@@ -40,15 +50,15 @@ export const transformCoreFORCEItems = (coreFORCEData: CoreFORCEShoppingCartResp
   return coreFORCEData.shopping_cart_items.map((item) => ({
     id: item.shopping_cart_item_id.toString(),
     name: item.description,
-    price: parseFloat(item.sale_price),
+    price: parseCommaSeparatedNumber(item.sale_price),
     quantity: item.quantity,
     image: item.image_url || item.small_image_url || undefined,
     description: item.description,
     // Additional coreFORCE-specific data
     productId: item.product_id,
     productCode: item.product_code,
-    unitPrice: parseFloat(item.unit_price),
-    baseCost: parseFloat(item.base_cost),
+    unitPrice: parseCommaSeparatedNumber(item.unit_price),
+    baseCost: parseCommaSeparatedNumber(item.base_cost),
     inventoryQuantity: item.inventory_quantity,
     timeSubmitted: item.time_submitted,
     // Additional properties from comprehensive data
@@ -70,12 +80,12 @@ export const transformCoreFORCEItems = (coreFORCEData: CoreFORCEShoppingCartResp
  */
 export const calculateOrderSummaryFromCoreFORCE = (coreFORCEData: CoreFORCEShoppingCartResponse): OrderSummary => {
   const subtotal = coreFORCEData.shopping_cart_items.reduce(
-    (sum, item) => sum + (parseFloat(item.sale_price) * item.quantity), 
+    (sum, item) => sum + (parseCommaSeparatedNumber(item.sale_price) * item.quantity), 
     0
   );
   
-  const shipping = parseFloat(coreFORCEData.estimated_shipping_charge) || 0;
-  const discount = parseFloat(coreFORCEData.discount_amount) || 0;
+  const shipping = parseCommaSeparatedNumber(coreFORCEData.estimated_shipping_charge) || 0;
+  const discount = parseCommaSeparatedNumber(coreFORCEData.discount_amount) || 0;
   const tax = (subtotal - discount) * 0.08; // 8% tax rate (adjust as needed)
   const total = subtotal + shipping + tax - discount;
 
@@ -91,7 +101,7 @@ export const calculateOrderSummaryFromCoreFORCE = (coreFORCEData: CoreFORCEShopp
     promotionCode: coreFORCEData.promotion_code,
     promotionDescription: coreFORCEData.promotion_code_description,
     loyaltyPoints: coreFORCEData.loyalty_points_awarded,
-    totalSavings: parseFloat(coreFORCEData.total_savings) || 0,
+    totalSavings: parseCommaSeparatedNumber(coreFORCEData.total_savings) || 0,
   } as OrderSummary & {
     discount: number;
     discountPercent: number;

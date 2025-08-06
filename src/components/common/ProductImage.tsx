@@ -40,11 +40,11 @@ const ProductImage: React.FC<ProductImageProps> = ({
   }
 
   return (
-    <div className={`${sizeClasses[size]} bg-gray-100 rounded-lg overflow-hidden ${className}`}>
+    <div className={`${sizeClasses[size]} bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center ${className}`}>
       <img
         src={src}
         alt={alt}
-        className={`w-full h-full object-cover transition-opacity duration-200 ${
+        className={`max-w-full max-h-full object-contain transition-opacity duration-200 ${
           imageLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={() => setImageLoaded(true)}

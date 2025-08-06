@@ -256,21 +256,18 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
-                            <div className="flex items-center space-x-2">
-                              <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                              {item.shippingOptions?.ship_to_ffl && (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                  FFL Required
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                            <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
                             {(item.productCode || item.upcCode) && (
                               <p className="text-xs text-gray-500 mt-1">
                                 {item.productCode && `SKU: ${item.productCode}`}
                                 {item.productCode && item.upcCode && ' • '}
                                 {item.upcCode && `UPC: ${item.upcCode}`}
                               </p>
+                            )}
+                            {item.shippingOptions?.ship_to_ffl && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mt-1">
+                                FFL Required
+                              </span>
                             )}
                           </div>
                           <button
@@ -310,9 +307,28 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                             <p className="text-lg font-semibold text-gray-900">
                               ${(item.price * item.quantity).toFixed(2)}
                             </p>
-                            <p className="text-sm text-gray-500">
-                              ${item.price.toFixed(2)} each
-                            </p>
+                            {/* Price Display */}
+                            {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                              <div className="flex flex-col items-end space-y-1">
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-gray-400 text-sm line-through">
+                                    ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
+                                  </span>
+                                  <span className="text-gray-900 text-sm font-medium">
+                                    ${item.price.toFixed(2)}
+                                  </span>
+                                </div>
+                                {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                                  <span className="text-green-600 text-xs font-medium">
+                                    Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <p className="text-sm text-gray-500">
+                                ${item.price.toFixed(2)} each
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
