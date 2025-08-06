@@ -278,9 +278,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                             className="text-gray-400 hover:text-red-500 transition-colors"
                             title="Remove item"
                           >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                            <span className="text-lg">✕</span>
                           </button>
                         </div>
 
@@ -292,18 +290,14 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                               className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
                               disabled={item.quantity <= 1}
                             >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                              </svg>
+                              <span className="text-sm font-bold">−</span>
                             </button>
                             <span className="w-12 text-center font-medium">{item.quantity}</span>
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
                             >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                              </svg>
+                              <span className="text-sm font-bold">+</span>
                             </button>
                           </div>
                           <div className="text-right">
@@ -328,9 +322,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                 onClick={handleContinueShopping}
                 className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-2"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
+                <span className="text-lg">←</span>
                 <span>Continue Shopping</span>
               </button>
             </div>
@@ -393,9 +385,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                             onClick={() => setShowPromoCodeInput(true)}
                             className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center space-x-1"
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
+                            <span className="text-lg">+</span>
                             <span>Have a promo code?</span>
                           </button>
                         ) : (
@@ -416,10 +406,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                                 className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                               >
                                 {promoCodeLoading ? (
-                                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                  </svg>
+                                  <span className="animate-pulse">...</span>
                                 ) : (
                                   'Apply'
                                 )}

@@ -395,6 +395,65 @@
   fill: none !important;
   visibility: visible !important;
   opacity: 1 !important;
+  stroke-width: 2 !important;
+}
+
+/* Force stroke on ALL path elements within stroke-based SVGs */
+#react-checkout-root svg[stroke="currentColor"] path,
+#react-checkout-root svg path[stroke="currentColor"] {
+  stroke: currentColor !important;
+  fill: none !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+/* Additional protection for specific stroke attributes */
+#react-checkout-root svg path[stroke-linecap="round"] {
+  stroke-linecap: round !important;
+}
+
+#react-checkout-root svg path[stroke-linejoin="round"] {
+  stroke-linejoin: round !important;
+}
+
+#react-checkout-root svg path[stroke-width="2"] {
+  stroke-width: 2 !important;
+}
+
+/* NUCLEAR OPTION: Force stroke on ALL SVG paths */
+#react-checkout-root svg path {
+  stroke: #6b7280 !important; /* Force gray color instead of currentColor */
+  fill: none !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force specific colors for different contexts */
+#react-checkout-root button:hover svg path {
+  stroke: #dc2626 !important; /* Red on hover for delete buttons */
+}
+
+#react-checkout-root .text-blue-600 svg path,
+#react-checkout-root .text-blue-600:hover svg path {
+  stroke: #2563eb !important; /* Blue for Continue Shopping */
+}
+
+#react-checkout-root .text-gray-400 svg path {
+  stroke: #9ca3af !important; /* Light gray for default state */
+}
+
+#react-checkout-root .text-green-600 svg path {
+  stroke: #16a34a !important; /* Green for success states */
+}
+
+/* But allow fill-based icons to work */
+#react-checkout-root svg[fill="currentColor"] path {
+  fill: currentColor !important;
+  stroke: none !important;
 }
 
 /* Button container protection */
