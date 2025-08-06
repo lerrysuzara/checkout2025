@@ -645,9 +645,18 @@
 #react-checkout-root .text-sm { font-size: 0.875rem !important; line-height: 1.25rem !important; }
 #react-checkout-root .text-base { font-size: 1rem !important; line-height: 1.5rem !important; }
 #react-checkout-root .text-lg { font-size: 1.125rem !important; line-height: 1.75rem !important; }
+#react-checkout-root .text-xl { font-size: 1.25rem !important; line-height: 1.75rem !important; }
+#react-checkout-root .text-2xl { font-size: 1.5rem !important; line-height: 2rem !important; }
+#react-checkout-root .text-3xl { font-size: 1.875rem !important; line-height: 2.25rem !important; }
 #react-checkout-root .font-medium { font-weight: 500 !important; }
 #react-checkout-root .font-semibold { font-weight: 600 !important; }
 #react-checkout-root .font-bold { font-weight: 700 !important; }
+#react-checkout-root .font-extrabold { font-weight: 800 !important; }
+
+/* Text alignment classes */
+#react-checkout-root .text-left { text-align: left !important; }
+#react-checkout-root .text-center { text-align: center !important; }
+#react-checkout-root .text-right { text-align: right !important; }
 
 /* Ensure buttons are properly styled */
 #react-checkout-root .btn,
