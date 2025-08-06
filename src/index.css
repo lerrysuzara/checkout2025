@@ -291,13 +291,25 @@
 #react-checkout-root .hover\:border-blue-300:hover { border-color: #93c5fd !important; }
 #react-checkout-root .hover\:text-gray-700:hover { color: #374151 !important; }
 
-/* SVG and Icon Support */
+/* SVG and Icon Support - AGGRESSIVE PROTECTION */
 #react-checkout-root svg {
   display: inline-block !important;
   vertical-align: middle !important;
   width: 1em !important;
   height: 1em !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   /* Don't force fill - let individual SVGs control this */
+}
+
+/* Ensure SVG elements are NEVER hidden */
+#react-checkout-root svg,
+#react-checkout-root svg * {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  clip: auto !important;
+  clip-path: none !important;
 }
 
 /* Explicit sizing for SVG containers */
@@ -368,6 +380,42 @@
 
 #react-checkout-root svg path[fill="currentColor"] {
   fill: currentColor !important;
+}
+
+/* Force stroke-based icons to be visible */
+#react-checkout-root svg[stroke="currentColor"] {
+  stroke: currentColor !important;
+  fill: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#react-checkout-root svg[stroke="currentColor"] path {
+  stroke: currentColor !important;
+  fill: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Button container protection */
+#react-checkout-root button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Specific protection for quantity control buttons */
+#react-checkout-root .w-8.h-8 {
+  width: 2rem !important;
+  height: 2rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Animation support for spinning icons */
@@ -576,4 +624,26 @@
   transform-origin: initial !important;
   perspective: none !important;
   backface-visibility: visible !important;
+}
+
+/* CRITICAL: Override any display:none that might hide our elements */
+#react-checkout-root button,
+#react-checkout-root svg,
+#react-checkout-root .w-8,
+#react-checkout-root .h-8,
+#react-checkout-root .w-4,
+#react-checkout-root .h-4,
+#react-checkout-root .w-5,
+#react-checkout-root .h-5 {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force button elements to be visible */
+#react-checkout-root button[class*="w-"],
+#react-checkout-root button[class*="h-"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
