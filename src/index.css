@@ -295,11 +295,12 @@
 #react-checkout-root svg {
   display: inline-block !important;
   vertical-align: middle !important;
-  fill: currentColor !important;
   width: 1em !important;
   height: 1em !important;
+  /* Don't force fill - let individual SVGs control this */
 }
 
+/* Explicit sizing for SVG containers */
 #react-checkout-root .w-4 svg,
 #react-checkout-root .h-4 svg {
   width: 1rem !important;
@@ -318,17 +319,74 @@
   height: 1.5rem !important;
 }
 
-/* Ensure SVG icons inherit text color */
+#react-checkout-root .w-8 svg,
+#react-checkout-root .h-8 svg {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+#react-checkout-root .w-16 svg,
+#react-checkout-root .h-16 svg {
+  width: 4rem !important;
+  height: 4rem !important;
+}
+
+/* SVG path and stroke handling */
 #react-checkout-root svg path {
+  /* Let the SVG attributes control fill/stroke */
+}
+
+#react-checkout-root svg[fill="currentColor"] {
   fill: currentColor !important;
+}
+
+#react-checkout-root svg[stroke="currentColor"] {
   stroke: currentColor !important;
+}
+
+#react-checkout-root svg[fill="currentColor"] path {
+  fill: currentColor !important;
+}
+
+#react-checkout-root svg[stroke="currentColor"] path {
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+#react-checkout-root svg[fill="none"] {
+  fill: none !important;
+}
+
+#react-checkout-root svg[fill="none"] path {
+  fill: none !important;
+}
+
+/* Ensure stroke properties work correctly */
+#react-checkout-root svg path[stroke="currentColor"] {
+  stroke: currentColor !important;
+}
+
+#react-checkout-root svg path[fill="currentColor"] {
+  fill: currentColor !important;
+}
+
+/* Animation support for spinning icons */
+#react-checkout-root .animate-spin {
+  animation: spin 1s linear infinite !important;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Force proper spacing for our layout */
 #react-checkout-root .space-y-4 > * + * { margin-top: 1rem !important; }
 #react-checkout-root .space-y-6 > * + * { margin-top: 1.5rem !important; }
 #react-checkout-root .space-x-4 > * + * { margin-left: 1rem !important; }
+#react-checkout-root .space-x-1 > * + * { margin-left: 0.25rem !important; }
 #react-checkout-root .space-x-2 > * + * { margin-left: 0.5rem !important; }
+#react-checkout-root .space-x-3 > * + * { margin-left: 0.75rem !important; }
 
 /* Border and Border Radius */
 #react-checkout-root .border { border-width: 1px !important; }
