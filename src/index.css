@@ -178,3 +178,109 @@
   text-align: initial !important;
   vertical-align: initial !important;
 }
+
+/* AGGRESSIVE OVERRIDES for coreFORCE-specific issues */
+/* Target the specific layout compression problems */
+
+/* Override coreFORCE grid container that's compressing our layout */
+.grid-container #react-checkout-root {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 20px !important;
+}
+
+/* Force proper sizing even if parent has constraints */
+#react-checkout-root {
+  min-width: 300px !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 600px !important;
+  
+  /* Override any parent flex/grid constraints */
+  flex-grow: 1 !important;
+  flex-shrink: 0 !important;
+  flex-basis: auto !important;
+  
+  /* Ensure we break out of any parent layout constraints */
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+}
+
+/* Override coreFORCE's potential CSS reset or layout styles */
+#react-checkout-root * {
+  /* Force our styles over any CSS reset */
+  all: revert !important;
+  box-sizing: border-box !important;
+}
+
+/* Re-establish our component styles after the revert */
+#react-checkout-root .bg-white { background-color: #ffffff !important; }
+#react-checkout-root .bg-gray-50 { background-color: #f9fafb !important; }
+#react-checkout-root .bg-gray-100 { background-color: #f3f4f6 !important; }
+#react-checkout-root .bg-blue-600 { background-color: #2563eb !important; }
+#react-checkout-root .bg-green-600 { background-color: #16a34a !important; }
+
+#react-checkout-root .text-white { color: #ffffff !important; }
+#react-checkout-root .text-gray-900 { color: #111827 !important; }
+#react-checkout-root .text-gray-600 { color: #4b5563 !important; }
+#react-checkout-root .text-gray-500 { color: #6b7280 !important; }
+
+#react-checkout-root .p-4 { padding: 1rem !important; }
+#react-checkout-root .p-6 { padding: 1.5rem !important; }
+#react-checkout-root .p-8 { padding: 2rem !important; }
+
+#react-checkout-root .m-4 { margin: 1rem !important; }
+#react-checkout-root .mx-auto { margin-left: auto !important; margin-right: auto !important; }
+
+#react-checkout-root .rounded { border-radius: 0.25rem !important; }
+#react-checkout-root .rounded-lg { border-radius: 0.5rem !important; }
+
+#react-checkout-root .border { border-width: 1px !important; }
+#react-checkout-root .border-gray-300 { border-color: #d1d5db !important; }
+
+#react-checkout-root .shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important; }
+#react-checkout-root .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important; }
+
+/* Force proper spacing for our layout */
+#react-checkout-root .space-y-4 > * + * { margin-top: 1rem !important; }
+#react-checkout-root .space-y-6 > * + * { margin-top: 1.5rem !important; }
+#react-checkout-root .space-x-4 > * + * { margin-left: 1rem !important; }
+
+/* Ensure buttons are properly styled */
+#react-checkout-root .btn,
+#react-checkout-root button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.375rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+/* Form inputs */
+#react-checkout-root input,
+#react-checkout-root select,
+#react-checkout-root textarea {
+  display: block !important;
+  width: 100% !important;
+  padding: 0.5rem 0.75rem !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 0.375rem !important;
+  background-color: #ffffff !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Override any parent transforms that might compress the layout */
+#react-checkout-root,
+#react-checkout-root * {
+  transform: none !important;
+  transform-origin: initial !important;
+  perspective: none !important;
+  backface-visibility: visible !important;
+}
