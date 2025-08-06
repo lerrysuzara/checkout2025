@@ -38,13 +38,13 @@ function loadCheckoutApp() {
     // Load CSS
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://lerrysuzara.github.io/checkout2025/assets/index-22ac9191.css';
+    link.href = 'https://lerrysuzara.github.io/checkout2025/assets/index.css';
     document.head.appendChild(link);
     
     // Load JS
     var script = document.createElement('script');
     script.type = 'module';
-    script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index-a4ea1767.js';
+    script.src = 'https://lerrysuzara.github.io/checkout2025/assets/index.js';
     script.onload = function() {
         console.log('✅ React app script loaded');
         // Wait for React app to initialize, then load cart data
@@ -240,10 +240,12 @@ setInterval(restoreJQuery, 1000);
 console.log('🚀 coreFORCE checkout integration loaded');
 ```
 
-## Asset URLs (Current Build)
+## Asset URLs (Fixed Names)
 
-- **CSS:** `https://lerrysuzara.github.io/checkout2025/assets/index-22ac9191.css`
-- **JS:** `https://lerrysuzara.github.io/checkout2025/assets/index-a4ea1767.js`
+- **CSS:** `https://lerrysuzara.github.io/checkout2025/assets/index.css`
+- **JS:** `https://lerrysuzara.github.io/checkout2025/assets/index.js`
+
+Note: Asset names are now fixed and won't change between builds, so you don't need to update your coreFORCE integration code.
 
 ## Available Functions
 
