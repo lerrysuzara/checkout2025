@@ -1002,6 +1002,67 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
+        {/* Checkout Progress Stepper */}
+        <div className="mb-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="flex items-center justify-between">
+              {/* Step 1: Cart */}
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-green-600">Cart</p>
+                  <p className="text-xs text-gray-500">Items selected</p>
+                </div>
+              </div>
+
+              {/* Connector */}
+              <div className="flex-1 h-0.5 bg-green-200 mx-4"></div>
+
+              {/* Step 2: Shipping & Payment */}
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-white">2</span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-blue-600">Shipping & Payment</p>
+                  <p className="text-xs text-gray-500">Address & payment method</p>
+                </div>
+              </div>
+
+              {/* Connector */}
+              <div className="flex-1 h-0.5 bg-gray-200 mx-4"></div>
+
+              {/* Step 3: Review */}
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-gray-500">3</span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-400">Review</p>
+                  <p className="text-xs text-gray-400">Order confirmation</p>
+                </div>
+              </div>
+
+              {/* Connector */}
+              <div className="flex-1 h-0.5 bg-gray-200 mx-4"></div>
+
+              {/* Step 4: Complete */}
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-gray-500">4</span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-400">Complete</p>
+                  <p className="text-xs text-gray-400">Order placed</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content - Shipping/Payment Forms */}

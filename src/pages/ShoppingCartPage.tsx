@@ -338,18 +338,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
               </div>
             </div>
 
-            {/* Continue Shopping */}
-            <div className="mt-6">
-              <button
-                onClick={handleContinueShopping}
-                className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-2"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="#2563eb" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                <span>Continue Shopping</span>
-              </button>
-            </div>
+
           </div>
 
           {/* Order Summary */}

@@ -166,238 +166,311 @@ const ReviewPage = ({ globalCartData }: ReviewPageProps) => {
   const paymentMethod = getPaymentMethodDisplay()
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-2 space-y-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Order Review</h2>
-          
-          <div className="space-y-4">
-            {cartData.items.map((item, index) => {
-              console.log('🔍 ReviewPage cart item shipping options:', item.name, item.shippingOptions)
-              return (
-                <div key={index} className="flex items-center space-x-4 py-4 border-b">
-                  <ProductImage 
-                    src={item.image} 
-                    alt={item.name}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                  <div className="flex-1">
-                    <h3 className="font-medium">{item.name}</h3>
-                    <p className="text-gray-600">Quantity: {item.quantity}</p>
-                    {item.productCode && (
-                      <p className="text-xs text-gray-500 mt-1">SKU: {item.productCode}</p>
-                    )}
-                    {item.shippingOptions?.ship_to_ffl && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mt-1">
-                        FFL Required
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    {/* Price Display */}
-                    {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
-                      <div className="flex flex-col items-end space-y-1">
-                        <div className="flex items-center space-x-1">
-                          <span className="text-gray-400 text-xs line-through">
-                            ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
-                          </span>
-                          <span className="text-gray-900 font-medium">
-                            ${item.price.toFixed(2)}
-                          </span>
-                        </div>
-                        {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
-                          <span className="text-green-600 text-xs">
-                            Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Checkout Progress Stepper */}
+        <div className="mb-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="flex items-center justify-between">
+              {/* Step 1: Cart */}
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-green-600">Cart</p>
+                  <p className="text-xs text-gray-500">Items selected</p>
+                </div>
+              </div>
+
+              {/* Connector */}
+              <div className="flex-1 h-0.5 bg-green-200 mx-4"></div>
+
+              {/* Step 2: Shipping & Payment */}
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-green-600">Shipping & Payment</p>
+                  <p className="text-xs text-gray-500">Address & payment method</p>
+                </div>
+              </div>
+
+              {/* Connector */}
+              <div className="flex-1 h-0.5 bg-blue-200 mx-4"></div>
+
+              {/* Step 3: Review */}
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-white">3</span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-blue-600">Review</p>
+                  <p className="text-xs text-gray-500">Order confirmation</p>
+                </div>
+              </div>
+
+              {/* Connector */}
+              <div className="flex-1 h-0.5 bg-gray-200 mx-4"></div>
+
+              {/* Step 4: Complete */}
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-gray-500">4</span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-400">Complete</p>
+                  <p className="text-xs text-gray-400">Order placed</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4">Order Review</h2>
+              
+              <div className="space-y-4">
+                {cartData.items.map((item, index) => {
+                  console.log('🔍 ReviewPage cart item shipping options:', item.name, item.shippingOptions)
+                  return (
+                    <div key={index} className="flex items-center space-x-4 py-4 border-b">
+                      <ProductImage 
+                        src={item.image} 
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-gray-600">Quantity: {item.quantity}</p>
+                        {(item.productCode || item.upcCode) && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            {item.productCode && `SKU: ${item.productCode}`}
+                            {item.productCode && item.upcCode && ' • '}
+                            {item.upcCode && `UPC: ${item.upcCode}`}
+                          </p>
+                        )}
+                        {item.shippingOptions?.ship_to_ffl && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mt-1">
+                            FFL Required
                           </span>
                         )}
                       </div>
-                    ) : (
-                      <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold mb-4">Shipping Address</h3>
-          <div className="text-gray-600">
-            {shippingDetails ? (
-              <>
-                <p>{shippingDetails.firstName} {shippingDetails.lastName}</p>
-                <p>{shippingDetails.address}</p>
-                {shippingDetails.address2 && <p>{shippingDetails.address2}</p>}
-                <p>{shippingDetails.city ? `${shippingDetails.city}, ` : ''}{shippingDetails.state} {shippingDetails.zipCode}</p>
-                <p className="mt-2">
-                  <strong>Shipping Method:</strong> {getShippingMethodDisplay()}
-                </p>
-                
-                {/* Additional Shipping Details */}
-                {shippingDetails.shippingMethod === 'pickup' && shippingDetails.selectedStoreLocation && (
-                  <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                    <p className="text-sm font-medium text-gray-700 mb-1">Store Details:</p>
-                    <p className="text-sm text-gray-600 font-medium">{shippingDetails.selectedStoreLocation}</p>
-                    {shippingDetails.selectedStoreAddress && (
-                      <p className="text-sm text-gray-600 mt-1">{shippingDetails.selectedStoreAddress}</p>
-                    )}
-                    <p className="text-xs text-gray-500 mt-2">You'll receive a notification when your order is ready for pickup.</p>
-                  </div>
-                )}
-                
-                {shippingDetails.shippingMethod === 'ship_to_ffl' && (
-                  <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                    <p className="text-sm font-medium text-gray-700 mb-1">FFL Details:</p>
-                    {shippingDetails.selectedFflDealer ? (
-                      <p className="text-sm text-gray-600">{shippingDetails.selectedFflDealer}</p>
-                    ) : shippingDetails.fflUploadOption === 'upload' ? (
-                      <p className="text-sm text-gray-600">FFL License will be uploaded after order confirmation</p>
-                    ) : shippingDetails.fflUploadOption === 'followup' ? (
-                      <p className="text-sm text-gray-600">FFL dealer not found - customer service will contact you</p>
-                    ) : (
-                      <p className="text-sm text-gray-600">FFL dealer selection required</p>
-                    )}
-                  </div>
-                )}
-              </>
-            ) : (
-              <p>No shipping details available</p>
-            )}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold mb-4">Payment Method</h3>
-          <div className="flex items-center">
-            {paymentMethod.icon.startsWith('http') ? (
-              <img 
-                src={paymentMethod.icon} 
-                alt={paymentMethod.name}
-                className="w-8 h-8 object-contain mr-3"
-              />
-            ) : (
-              <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center mr-3">
-                <span className="text-lg">{paymentMethod.icon}</span>
-              </div>
-            )}
-            <div>
-              <p className="font-medium">{paymentMethod.name}</p>
-              <p className="text-sm text-gray-500">{paymentMethod.description}</p>
-              {paymentMethod.details && (
-                <p className="text-sm text-gray-600 mt-1">{paymentMethod.details}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="lg:col-span-1">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
-          
-          {/* Cart Items */}
-          <div className="space-y-4 mb-6">
-            {cartData.items.map((item) => (
-              <div key={item.id} className="flex items-center space-x-3">
-                <ProductImage
-                  src={item.image}
-                  alt={item.name}
-                  size="sm"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
-                  <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
-                </div>
-                <div className="text-sm font-medium text-gray-900">
-                  {/* Price Display */}
-                  {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
-                    <div className="flex flex-col items-end space-y-1">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-gray-400 text-xs line-through">
-                          ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
-                        </span>
-                        <span className="text-gray-900 text-sm font-medium">
-                          ${item.price.toFixed(2)}
-                        </span>
+                      <div className="text-right">
+                        {/* Price Display */}
+                        {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                          <div className="flex flex-col items-end space-y-1">
+                            <div className="flex items-center space-x-1">
+                              <span className="text-gray-400 text-xs line-through">
+                                ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
+                              </span>
+                              <span className="text-gray-900 font-medium">
+                                ${item.price.toFixed(2)}
+                              </span>
+                            </div>
+                            {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                              <span className="text-green-600 text-xs">
+                                Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                        )}
                       </div>
-                      {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
-                        <span className="text-green-600 text-xs">
-                          Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
-                        </span>
-                      )}
                     </div>
-                  ) : (
-                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold mb-4">Shipping Address</h3>
+              <div className="text-gray-600">
+                {shippingDetails ? (
+                  <>
+                    <p>{shippingDetails.firstName} {shippingDetails.lastName}</p>
+                    <p>{shippingDetails.address}</p>
+                    {shippingDetails.address2 && <p>{shippingDetails.address2}</p>}
+                    <p>{shippingDetails.city ? `${shippingDetails.city}, ` : ''}{shippingDetails.state} {shippingDetails.zipCode}</p>
+                    <p className="mt-2">
+                      <strong>Shipping Method:</strong> {getShippingMethodDisplay()}
+                    </p>
+                    
+                    {/* Additional Shipping Details */}
+                    {shippingDetails.shippingMethod === 'pickup' && shippingDetails.selectedStoreLocation && (
+                      <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                        <p className="text-sm font-medium text-gray-700 mb-1">Store Details:</p>
+                        <p className="text-sm text-gray-600 font-medium">{shippingDetails.selectedStoreLocation}</p>
+                        {shippingDetails.selectedStoreAddress && (
+                          <p className="text-sm text-gray-600 mt-1">{shippingDetails.selectedStoreAddress}</p>
+                        )}
+                        <p className="text-xs text-gray-500 mt-2">You'll receive a notification when your order is ready for pickup.</p>
+                      </div>
+                    )}
+                    
+                    {shippingDetails.shippingMethod === 'ship_to_ffl' && (
+                      <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                        <p className="text-sm font-medium text-gray-700 mb-1">FFL Details:</p>
+                        {shippingDetails.selectedFflDealer ? (
+                          <p className="text-sm text-gray-600">{shippingDetails.selectedFflDealer}</p>
+                        ) : shippingDetails.fflUploadOption === 'upload' ? (
+                          <p className="text-sm text-gray-600">FFL License will be uploaded after order confirmation</p>
+                        ) : shippingDetails.fflUploadOption === 'followup' ? (
+                          <p className="text-sm text-gray-600">FFL dealer not found - customer service will contact you</p>
+                        ) : (
+                          <p className="text-sm text-gray-600">FFL dealer selection required</p>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p>No shipping details available</p>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold mb-4">Payment Method</h3>
+              <div className="flex items-center">
+                {paymentMethod.icon.startsWith('http') ? (
+                  <img 
+                    src={paymentMethod.icon} 
+                    alt={paymentMethod.name}
+                    className="w-8 h-8 object-contain mr-3"
+                  />
+                ) : (
+                  <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center mr-3">
+                    <span className="text-lg">{paymentMethod.icon}</span>
+                  </div>
+                )}
+                <div>
+                  <p className="font-medium">{paymentMethod.name}</p>
+                  <p className="text-sm text-gray-500">{paymentMethod.description}</p>
+                  {paymentMethod.details && (
+                    <p className="text-sm text-gray-600 mt-1">{paymentMethod.details}</p>
                   )}
                 </div>
               </div>
-            ))}
-          </div>
-          
-          {/* Order Summary Details */}
-          <div className="border-t border-gray-200 pt-4">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal ({cartData.items.length} {cartData.items.length === 1 ? 'Item' : 'Items'})</span>
-                <span className="font-medium">${cartData.summary.subtotal.toFixed(2)}</span>
-              </div>
-              
-              {cartData.summary.shipping > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Shipping</span>
-                  <span className="font-medium">${cartData.summary.shipping.toFixed(2)}</span>
-                </div>
-              )}
-              
-              {cartData.summary.tax > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Estimated Sales Tax</span>
-                  <span className="font-medium">${cartData.summary.tax.toFixed(2)}</span>
-                </div>
-              )}
-              
-              {cartData.summary.discount && cartData.summary.discount > 0 && (
-                <div className="flex justify-between text-sm text-green-600">
-                  <span>Discount</span>
-                  <span>-${cartData.summary.discount.toFixed(2)}</span>
-                </div>
-              )}
-              
-              <div className="border-t border-gray-200 pt-2">
-                <div className="flex justify-between text-lg font-semibold">
-                  <span>Total</span>
-                  <span>${cartData.summary.total.toFixed(2)}</span>
-                </div>
-              </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <button
-              onClick={handleSubmitOrder}
-              disabled={isSubmitting}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center"
-            >
-              {isSubmitting ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Processing...
-                </>
-              ) : (
-                `Place Order - $${cartData.summary.total.toFixed(2)}`
-              )}
-            </button>
-            
-            <button
-              onClick={() => navigate('/shipping-payment')}
-              className="w-full bg-gray-200 text-gray-800 py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors"
-            >
-              Back to Payment
-            </button>
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
+              
+              {/* Cart Items */}
+              <div className="space-y-4 mb-6">
+                {cartData.items.map((item) => (
+                  <div key={item.id} className="flex items-center space-x-3">
+                    <ProductImage
+                      src={item.image}
+                      alt={item.name}
+                      size="sm"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
+                      <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                    </div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {/* Price Display */}
+                      {item.listPrice && parseFloat(item.listPrice.replace(/,/g, '')) > item.price ? (
+                        <div className="flex flex-col items-end space-y-1">
+                          <div className="flex items-center space-x-1">
+                            <span className="text-gray-400 text-xs line-through">
+                              ${parseFloat(item.listPrice.replace(/,/g, '')).toFixed(2)}
+                            </span>
+                            <span className="text-gray-900 text-sm font-medium">
+                              ${item.price.toFixed(2)}
+                            </span>
+                          </div>
+                          {item.savings && parseFloat(item.savings.replace(/,/g, '')) > 0 && (
+                            <span className="text-green-600 text-xs">
+                              Save ${parseFloat(item.savings.replace(/,/g, '')).toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span>${(item.price * item.quantity).toFixed(2)}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Order Summary Details */}
+              <div className="border-t border-gray-200 pt-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Subtotal ({cartData.items.length} {cartData.items.length === 1 ? 'Item' : 'Items'})</span>
+                    <span className="font-medium">${cartData.summary.subtotal.toFixed(2)}</span>
+                  </div>
+                  
+                  {cartData.summary.shipping > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Shipping</span>
+                      <span className="font-medium">${cartData.summary.shipping.toFixed(2)}</span>
+                    </div>
+                  )}
+                  
+                  {cartData.summary.tax > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Estimated Sales Tax</span>
+                      <span className="font-medium">${cartData.summary.tax.toFixed(2)}</span>
+                    </div>
+                  )}
+                  
+                  {cartData.summary.discount && cartData.summary.discount > 0 && (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Discount</span>
+                      <span>-${cartData.summary.discount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  
+                  <div className="border-t border-gray-200 pt-2">
+                    <div className="flex justify-between text-lg font-semibold">
+                      <span>Total</span>
+                      <span>${cartData.summary.total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={handleSubmitOrder}
+                  disabled={isSubmitting}
+                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Processing...
+                    </>
+                  ) : (
+                    `Place Order - $${cartData.summary.total.toFixed(2)}`
+                  )}
+                </button>
+                
+                <button
+                  onClick={() => navigate('/shipping-payment')}
+                  className="w-full bg-gray-200 text-gray-800 py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Back to Payment
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
