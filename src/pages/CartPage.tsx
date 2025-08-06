@@ -241,7 +241,14 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
                   }
                 />
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm sm:text-base">{item.name}</h3>
+                  <div className="flex items-center space-x-2">
+                    <h3 className="font-medium text-sm sm:text-base">{item.name}</h3>
+                    {item.shippingOptions?.ship_to_ffl && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                        FFL Required
+                      </span>
+                    )}
+                  </div>
                   <p className="text-gray-600 text-sm">${item.price.toFixed(2)}</p>
                   {item.productCode && (
                     <p className="text-gray-500 text-xs">SKU: {item.productCode}</p>
@@ -264,15 +271,6 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
                       )}
                     </div>
                   )}
-                  {/* Show FFL requirement */}
-                  {item.shippingOptions && item.shippingOptions.ship_to_ffl && (
-                    <div className="mt-1">
-                      <span className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded mr-1">
-                        FFL Required
-                      </span>
-                    </div>
-                  )}
-
                 </div>
                 <div className="flex items-center justify-between sm:justify-start sm:space-x-4">
                   <div className="flex items-center space-x-2">

@@ -221,11 +221,29 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
     }))
   }
 
+  // Format card number with spaces (xxxx xxxx xxxx xxxx)
+  const formatCardNumber = (value: string) => {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, '')
+    // Limit to 16 digits
+    const limited = digits.slice(0, 16)
+    // Add spaces every 4 digits
+    return limited.replace(/(\d{4})(?=\d)/g, '$1 ')
+  }
+
   const handlePaymentInputChange = (field: string, value: string | number) => {
-    setPaymentForm(prev => ({
-      ...prev,
-      [field]: value
-    }))
+    if (field === 'cardNumber') {
+      const formattedValue = formatCardNumber(value as string)
+      setPaymentForm(prev => ({
+        ...prev,
+        [field]: formattedValue
+      }))
+    } else {
+      setPaymentForm(prev => ({
+        ...prev,
+        [field]: value
+      }))
+    }
   }
 
   const handleBillingAddressChange = (field: string, value: string | boolean) => {
@@ -400,7 +418,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
       id: 'credit_card',
       name: 'Credit Card',
       description: 'Visa, Mastercard, American Express, Discover',
-      icon: 'http://localhost:5173/assets/images/credit_card.png',
+      icon: '💳',
       requiresFields: ['cardNumber', 'cardholderName', 'expiryMonth', 'expiryYear', 'cvv'],
       supportsSplit: true
     },
@@ -408,7 +426,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
       id: 'gift_card',
       name: 'Gift Card',
       description: 'Apply gift card balance',
-      icon: 'http://localhost:5173/assets/images/gift_card.png',
+      icon: '🎁',
       requiresFields: ['giftCardNumber', 'giftCardPin'],
       supportsSplit: true
     },
@@ -432,7 +450,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
       id: 'loyalty_points',
       name: 'Loyalty Points',
       description: 'Use your accumulated loyalty points',
-      icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png',
+      icon: '🌟',
       requiresFields: ['loyaltyPoints'],
       supportsSplit: true
     },
@@ -440,7 +458,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
       id: 'paypal',
       name: 'PayPal',
       description: 'Pay with your PayPal account',
-      icon: 'https://www.paypalobjects.com/webstatic/mktg/logo-center/PP_Acceptance_Marks_for_LogoCenter_266x142.png',
+      icon: 'https://www.paypalobjects.com/digitalassets/c/website/logo/full-text/pp_fc_hl.svg',
       requiresFields: ['paypalToken'],
       supportsSplit: false
     },
@@ -448,7 +466,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
       id: 'invoice',
       name: 'Invoice',
       description: 'Pay by invoice (business accounts only)',
-      icon: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+      icon: '🧾',
       requiresFields: ['invoiceNumber'],
       supportsSplit: false
     }
@@ -485,7 +503,10 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
   // Update split payment
   const updateSplitPayment = (id: string, field: string, value: any) => {
     setSplitPayments(prev => prev.map(payment => 
-      payment.id === id ? { ...payment, [field]: value } : payment
+      payment.id === id ? { 
+        ...payment, 
+        [field]: field === 'cardNumber' ? formatCardNumber(value as string) : value 
+      } : payment
     ))
   }
 
@@ -843,6 +864,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
       ...shippingForm,
       shippingMethod,
       selectedStoreLocation: shippingMethod === 'pickup' ? selectedStore?.name || selectedStoreLocation : null,
+      selectedStoreAddress: shippingMethod === 'pickup' ? selectedStore?.address || null : null,
       selectedFflDealer: shippingMethod === 'ship_to_ffl' ? selectedFflDealer : null,
       fflUploadOption: shippingMethod === 'ship_to_ffl' ? fflUploadOption : null
     }))
@@ -903,28 +925,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-4">
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
-                1
-              </div>
-              <span className="ml-2 text-sm font-medium text-blue-600">Shipping</span>
-            </div>
-            <div className="w-16 h-0.5 bg-gray-300"></div>
-            <div className="flex items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                activeTab === 'payment' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
-              }`}>
-                2
-              </div>
-              <span className={`ml-2 text-sm font-medium ${
-                activeTab === 'payment' ? 'text-blue-600' : 'text-gray-600'
-              }`}>Payment</span>
-            </div>
-          </div>
-        </div>
+
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content - Shipping/Payment Forms */}
@@ -1382,7 +1383,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
                       </button>
                       <button
                         type="submit"
-                        className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors font-medium"
+                        className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
                       >
                         Continue to Payment
                       </button>
@@ -1496,13 +1497,13 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
                                   <div className="text-xs text-gray-500 mt-1">{method.description}</div>
                                 </div>
                               ) : (
-                                <>
-                                  <span className="text-lg">{method.icon}</span>
-                                  <div className="text-left">
+                                <div className="flex-1">
+                                  <div className="text-center">
+                                    <div className="text-2xl mb-1">{method.icon}</div>
                                     <div className="font-medium text-sm">{method.name}</div>
                                     <div className="text-xs text-gray-500">{method.description}</div>
                                   </div>
-                                </>
+                                </div>
                               )}
                               {isUsed && method.id !== 'credit_card' && (
                                 <div className="absolute top-2 right-2">
@@ -1631,10 +1632,11 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
                                  />
                                  <input
                                    type="text"
-                                   placeholder="Card Number"
+                                   placeholder="1234 5678 9012 3456"
                                    value={payment.cardNumber || ''}
                                    onChange={(e) => updateSplitPayment(payment.id, 'cardNumber', e.target.value)}
                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   maxLength={19}
                                  />
                                  <div className="grid grid-cols-3 gap-2">
                                    <input
@@ -1782,6 +1784,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
                                 onChange={(e) => handlePaymentInputChange('cardNumber', e.target.value)}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="1234 5678 9012 3456"
+                                maxLength={19}
                                 required
                               />
                             </div>
@@ -2102,7 +2105,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
                       </button>
                       <button
                         type="submit"
-                        className="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors font-medium"
+                        className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
                       >
                         Review Your Order
                       </button>
@@ -2120,22 +2123,25 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
               
               {/* Cart Items */}
               <div className="space-y-4 mb-6">
-                {cartData.items.map((item) => (
-                  <div key={item.id} className="flex items-center space-x-3">
-                    <ProductImage
-                      src={item.image}
-                      alt={item.name}
-                      size="sm"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
-                      <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                {cartData.items.map((item) => {
+                  console.log('🔍 Cart item shipping options:', item.name, item.shippingOptions)
+                  return (
+                    <div key={item.id} className="flex items-center space-x-3">
+                      <ProductImage
+                        src={item.image}
+                        alt={item.name}
+                        size="sm"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
+                        <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                      </div>
+                      <div className="text-sm font-medium text-gray-900">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </div>
                     </div>
-                    <div className="text-sm font-medium text-gray-900">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
               
               {/* Order Summary Details */}
@@ -2155,7 +2161,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
                   
                   {cartData.summary.tax > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Tax</span>
+                      <span className="text-gray-600">Estimated Sales Tax</span>
                       <span className="font-medium">${cartData.summary.tax.toFixed(2)}</span>
                     </div>
                   )}

@@ -56,13 +56,13 @@ const ReviewPage = ({ globalCartData }: ReviewPageProps) => {
     if (!paymentDetails) return { name: 'Not selected', icon: '💳', description: '', details: '' }
     
     const paymentMethods = [
-      { id: 'credit_card', name: 'Credit Card', icon: 'http://localhost:5173/assets/images/credit_card.png', description: 'Visa, Mastercard, American Express, Discover' },
+      { id: 'credit_card', name: 'Credit Card', icon: '💳', description: 'Visa, Mastercard, American Express, Discover' },
       { id: 'paypal', name: 'PayPal', icon: 'https://www.paypalobjects.com/webstatic/mktg/logo-center/PP_Acceptance_Marks_for_LogoCenter_266x142.png', description: 'Pay with your PayPal account' },
-      { id: 'gift_card', name: 'Gift Card', icon: 'http://localhost:5173/assets/images/gift_card.png', description: 'Apply gift card balance' },
+      { id: 'gift_card', name: 'Gift Card', icon: '🎁', description: 'Apply gift card balance' },
       { id: 'sezzle', name: 'Sezzle', icon: 'https://images.ctfassets.net/6d085vujy22q/273Nz43iRAEjHGwsaCmQDu/dda99ab0df0f1914fa7fcaaba21035fc/image_201.png?w=1000&h=356&q=50&fm=webp', description: 'Pay in 4 interest-free installments' },
       { id: 'credova', name: 'Credova', icon: 'https://cdn.prod.website-files.com/68409dd5e6545795f95d69c6/685c61c8230042645ce3de7c_BlueLogo.webp', description: 'Shop Now, Pay Over Time' },
       { id: 'loyalty_points', name: 'Loyalty Points', icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png', description: 'Use your accumulated loyalty points' },
-      { id: 'invoice', name: 'Invoice', icon: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', description: 'Pay by invoice (business accounts only)' }
+      { id: 'invoice', name: 'Invoice', icon: '🧾', description: 'Pay by invoice (business accounts only)' }
     ]
     
     const method = paymentMethods.find(m => m.id === paymentDetails.paymentMethod)
@@ -172,25 +172,35 @@ const ReviewPage = ({ globalCartData }: ReviewPageProps) => {
           <h2 className="text-xl font-semibold mb-4">Order Review</h2>
           
           <div className="space-y-4">
-            {cartData.items.map((item, index) => (
-              <div key={index} className="flex items-center space-x-4 py-4 border-b">
-                <ProductImage 
-                  src={item.image} 
-                  alt={item.name}
-                  className="w-16 h-16 object-cover rounded"
-                />
-                <div className="flex-1">
-                  <h3 className="font-medium">{item.name}</h3>
-                  <p className="text-gray-600">Quantity: {item.quantity}</p>
-                  {item.productCode && (
-                    <p className="text-xs text-gray-500">SKU: {item.productCode}</p>
-                  )}
+            {cartData.items.map((item, index) => {
+              console.log('🔍 ReviewPage cart item shipping options:', item.name, item.shippingOptions)
+              return (
+                <div key={index} className="flex items-center space-x-4 py-4 border-b">
+                  <ProductImage 
+                    src={item.image} 
+                    alt={item.name}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-medium">{item.name}</h3>
+                      {item.shippingOptions?.ship_to_ffl && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                          FFL Required
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-gray-600">Quantity: {item.quantity}</p>
+                    {item.productCode && (
+                      <p className="text-xs text-gray-500">SKU: {item.productCode}</p>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
 
@@ -211,8 +221,11 @@ const ReviewPage = ({ globalCartData }: ReviewPageProps) => {
                 {shippingDetails.shippingMethod === 'pickup' && shippingDetails.selectedStoreLocation && (
                   <div className="mt-3 p-3 bg-gray-50 rounded-md">
                     <p className="text-sm font-medium text-gray-700 mb-1">Store Details:</p>
-                    <p className="text-sm text-gray-600">{shippingDetails.selectedStoreLocation}</p>
-                    <p className="text-xs text-gray-500 mt-1">You'll receive a notification when your order is ready for pickup.</p>
+                    <p className="text-sm text-gray-600 font-medium">{shippingDetails.selectedStoreLocation}</p>
+                    {shippingDetails.selectedStoreAddress && (
+                      <p className="text-sm text-gray-600 mt-1">{shippingDetails.selectedStoreAddress}</p>
+                    )}
+                    <p className="text-xs text-gray-500 mt-2">You'll receive a notification when your order is ready for pickup.</p>
                   </div>
                 )}
                 
@@ -263,36 +276,63 @@ const ReviewPage = ({ globalCartData }: ReviewPageProps) => {
       </div>
 
       <div className="lg:col-span-1">
-        <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-          <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
           
-          <div className="space-y-2 mb-6">
-            <div className="flex justify-between">
-              <span>Subtotal ({cartData.items.length} {cartData.items.length === 1 ? 'Item' : 'Items'})</span>
-              <span>${cartData.summary.subtotal.toFixed(2)}</span>
-            </div>
-            {cartData.summary.shipping > 0 && (
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>${cartData.summary.shipping.toFixed(2)}</span>
+          {/* Cart Items */}
+          <div className="space-y-4 mb-6">
+            {cartData.items.map((item) => (
+              <div key={item.id} className="flex items-center space-x-3">
+                <ProductImage
+                  src={item.image}
+                  alt={item.name}
+                  size="sm"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
+                  <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                </div>
+                <div className="text-sm font-medium text-gray-900">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </div>
               </div>
-            )}
-            {cartData.summary.tax > 0 && (
-              <div className="flex justify-between">
-                <span>Tax</span>
-                <span>${cartData.summary.tax.toFixed(2)}</span>
+            ))}
+          </div>
+          
+          {/* Order Summary Details */}
+          <div className="border-t border-gray-200 pt-4">
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Subtotal ({cartData.items.length} {cartData.items.length === 1 ? 'Item' : 'Items'})</span>
+                <span className="font-medium">${cartData.summary.subtotal.toFixed(2)}</span>
               </div>
-            )}
-            {cartData.summary.discount && cartData.summary.discount > 0 && (
-              <div className="flex justify-between text-green-600">
-                <span>Discount</span>
-                <span>-${cartData.summary.discount.toFixed(2)}</span>
-              </div>
-            )}
-            <div className="border-t pt-2">
-              <div className="flex justify-between font-semibold text-lg">
-                <span>Total</span>
-                <span>${cartData.summary.total.toFixed(2)}</span>
+              
+              {cartData.summary.shipping > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Shipping</span>
+                  <span className="font-medium">${cartData.summary.shipping.toFixed(2)}</span>
+                </div>
+              )}
+              
+              {cartData.summary.tax > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Estimated Sales Tax</span>
+                  <span className="font-medium">${cartData.summary.tax.toFixed(2)}</span>
+                </div>
+              )}
+              
+              {cartData.summary.discount && cartData.summary.discount > 0 && (
+                <div className="flex justify-between text-sm text-green-600">
+                  <span>Discount</span>
+                  <span>-${cartData.summary.discount.toFixed(2)}</span>
+                </div>
+              )}
+              
+              <div className="border-t border-gray-200 pt-2">
+                <div className="flex justify-between text-lg font-semibold">
+                  <span>Total</span>
+                  <span>${cartData.summary.total.toFixed(2)}</span>
+                </div>
               </div>
             </div>
           </div>

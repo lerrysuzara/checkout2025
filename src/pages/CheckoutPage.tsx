@@ -683,7 +683,7 @@ const CheckoutPage = ({ globalCartData }: CheckoutPageProps) => {
                     </div>
                     
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Tax</span>
+                      <span className="text-gray-600">Estimated Sales Tax</span>
                       <span className="font-medium">${cartData.summary.tax.toFixed(2)}</span>
                     </div>
                     

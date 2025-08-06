@@ -256,7 +256,14 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
-                            <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
+                            <div className="flex items-center space-x-2">
+                              <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
+                              {item.shippingOptions?.ship_to_ffl && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                  FFL Required
+                                </span>
+                              )}
+                            </div>
                             <p className="text-sm text-gray-600 mt-1">{item.description}</p>
                             {(item.productCode || item.upcCode) && (
                               <p className="text-xs text-gray-500 mt-1">
@@ -349,7 +356,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                   </div>
                   
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tax</span>
+                    <span className="text-gray-600">Estimated Sales Tax</span>
                     <span className="font-medium">${orderSummary.tax.toFixed(2)}</span>
                   </div>
                   
@@ -453,9 +460,6 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                       <span>Total</span>
                       <span>${orderSummary.total.toFixed(2)}</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {orderSummary.currency} • Includes all applicable taxes
-                    </p>
                   </div>
                 </div>
               )}
