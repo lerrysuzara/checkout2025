@@ -7,9 +7,20 @@ This document contains the HTML and JavaScript code needed to integrate the Reac
 ```html
 <div class="grid-container">
    <!-- React Checkout App Container -->
+   <!-- Important: The ID "react-checkout-root" is required for CSS isolation -->
     <div id="react-checkout-root"></div>
 </div>
 ```
+
+## CSS Isolation
+
+The checkout application includes comprehensive CSS isolation to prevent conflicts with the parent coreFORCE page:
+
+- **Scoped styles**: All checkout styles are scoped to `#react-checkout-root`
+- **CSS reset**: Prevents inheritance of unwanted parent styles
+- **Important declarations**: Uses `!important` to override parent CSS
+- **Layout protection**: Ensures the checkout maintains its intended layout
+- **Z-index management**: Prevents modal and overlay conflicts
 
 ## JavaScript Integration Code
 

@@ -1,3 +1,180 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CSS Isolation for coreFORCE Integration */
+#react-checkout-root {
+  /* Reset all inherited styles */
+  all: unset;
+  
+  /* Ensure our checkout has its own isolated styling context */
+  contain: layout style;
+  isolation: isolate;
+  
+  /* Set our own base styles */
+  display: block !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  
+  /* Reset font and text properties that might be inherited */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  color: #111827 !important;
+  
+  /* Reset margins and padding */
+  margin: 0 !important;
+  padding: 0 !important;
+  
+  /* Ensure proper background */
+  background: #f9fafb !important;
+  
+  /* Prevent parent z-index issues */
+  position: relative !important;
+  z-index: 1000 !important;
+}
+
+/* Reset all elements within our checkout to prevent inheritance */
+#react-checkout-root *,
+#react-checkout-root *::before,
+#react-checkout-root *::after {
+  box-sizing: border-box !important;
+}
+
+/* Ensure our checkout components don't inherit unwanted styles */
+#react-checkout-root div,
+#react-checkout-root span,
+#react-checkout-root h1,
+#react-checkout-root h2,
+#react-checkout-root h3,
+#react-checkout-root h4,
+#react-checkout-root h5,
+#react-checkout-root h6,
+#react-checkout-root p,
+#react-checkout-root button,
+#react-checkout-root input,
+#react-checkout-root select,
+#react-checkout-root textarea,
+#react-checkout-root form,
+#react-checkout-root label,
+#react-checkout-root table,
+#react-checkout-root tr,
+#react-checkout-root td,
+#react-checkout-root th {
+  /* Reset inherited properties that commonly cause issues */
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+  margin: initial !important;
+  padding: initial !important;
+  border: initial !important;
+  background: initial !important;
+  text-decoration: initial !important;
+  text-transform: initial !important;
+  letter-spacing: initial !important;
+  word-spacing: initial !important;
+}
+
+/* Prevent parent CSS from affecting our buttons and form elements */
+#react-checkout-root button {
+  all: unset;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+#react-checkout-root input,
+#react-checkout-root select,
+#react-checkout-root textarea {
+  all: unset;
+  box-sizing: border-box !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Ensure our checkout takes full available space and doesn't get squeezed */
+#react-checkout-root .min-h-screen {
+  min-height: 100vh !important;
+}
+
+/* Override any parent flex or grid that might compress our layout */
+#react-checkout-root .max-w-7xl,
+#react-checkout-root .max-w-6xl {
+  max-width: 80rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Ensure proper spacing and layout */
+#react-checkout-root .grid {
+  display: grid !important;
+}
+
+#react-checkout-root .flex {
+  display: flex !important;
+}
+
+/* Prevent text and sizing issues */
+#react-checkout-root {
+  font-feature-settings: normal !important;
+  font-variation-settings: normal !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Additional isolation for the checkout app container */
+#react-checkout-root .checkout-app-container {
+  /* Ensure we don't inherit any unwanted display properties */
+  display: block !important;
+  width: 100% !important;
+  
+  /* Reset any transforms or positioning that might be inherited */
+  transform: none !important;
+  position: relative !important;
+  
+  /* Ensure proper overflow handling */
+  overflow: visible !important;
+  
+  /* Reset any inherited flexbox or grid properties from parent */
+  flex: none !important;
+  grid-area: auto !important;
+}
+
+/* Ensure our modals and overlays aren't affected by parent z-index stacking */
+#react-checkout-root .fixed {
+  position: fixed !important;
+  z-index: 9999 !important;
+}
+
+/* Protect against parent CSS that might affect our images */
+#react-checkout-root img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+}
+
+/* Ensure our form elements have proper styling */
+#react-checkout-root input[type="text"],
+#react-checkout-root input[type="email"],
+#react-checkout-root input[type="password"],
+#react-checkout-root input[type="number"],
+#react-checkout-root select,
+#react-checkout-root textarea {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+/* Additional protection for specific coreFORCE interference */
+#react-checkout-root table,
+#react-checkout-root th,
+#react-checkout-root td {
+  border-collapse: initial !important;
+  border-spacing: initial !important;
+  text-align: initial !important;
+  vertical-align: initial !important;
+}

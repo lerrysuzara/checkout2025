@@ -23,15 +23,7 @@ const Layout: React.FC<LayoutProps> = ({
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <div className="checkout-container">
-        {/* Header */}
-        <header className="text-center mb-8 pt-4">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Secure Checkout
-          </h1>
-          <p className="text-gray-600">
-            Complete your purchase in a few simple steps
-          </p>
-        </header>
+
 
         {/* Navigation */}
         <div className="mb-8">

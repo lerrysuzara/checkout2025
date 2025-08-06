@@ -125,16 +125,9 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="checkout-app-container min-h-screen bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 py-8">
-          <header className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Secure Checkout
-            </h1>
-            <p className="text-gray-600">
-              Complete your purchase in a few simple steps
-            </p>
-          </header>
+
 
                            <Routes>
                    <Route path="/" element={<Navigate to="/cart" replace />} />
