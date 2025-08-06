@@ -27,7 +27,7 @@ function App() {
   
   // Detect if app is embedded (not standalone)
   const isEmbedded = () => {
-    return !window.location.href.startsWith('http://localhost/');
+    return !window.location.href.startsWith('http://localhost');
   }
 
   // Function to load mock data (only in standalone mode)
@@ -119,11 +119,13 @@ function App() {
     console.log('🚀 React App initialized - updateCartData function exposed')
     console.log(`🌐 App mode: ${isEmbedded() ? 'Embedded' : 'Standalone'}`)
     
-    // Load coreFORCE mock data by default for testing (only in standalone mode)
+    // Load coreFORCE mock data by default for testing (only in localhost development)
     if (!isEmbedded()) {
       setTimeout(() => {
         loadCoreFORCEMockData()
       }, 100)
+    } else {
+      console.log('🚫 Embedded mode: No automatic mock data loading')
     }
     
     // Listen for messages from parent window (if in iframe)

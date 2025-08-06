@@ -28,17 +28,18 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
   useEffect(() => {
     // Detect if app is embedded
     const isEmbedded = () => {
-      return !window.location.href.startsWith('http://localhost/');
+      return !window.location.href.startsWith('http://localhost');
     }
 
-    // Load mock data if no cart data is provided (only in standalone mode)
-    if (!globalCartData || !globalCartData.items || globalCartData.items.length === 0) {
-      if (isEmbedded()) {
-        console.log('🚫 Mock data loading disabled when embedded')
-        setLoading(false)
-        return
-      }
-      
+    // Only load data if provided and not embedded
+    if (globalCartData && globalCartData.items && globalCartData.items.length > 0) {
+      console.log('🛒 Using provided cart data:', globalCartData)
+      setCartItems(globalCartData.items)
+      setOrderSummary(globalCartData.summary)
+    } else if (isEmbedded()) {
+      console.log('🚫 Embedded mode: No mock data loading')
+      // Keep empty cart state when embedded
+    } else {
       console.log('🛒 Loading coreFORCE mock shopping cart data...')
       
       if (validateCoreFORCECartData(mockCoreFORCEShoppingCartResponse)) {
@@ -49,10 +50,6 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
       } else {
         console.error('❌ Invalid coreFORCE mock data structure')
       }
-    } else {
-      console.log('🛒 Using provided cart data:', globalCartData)
-      setCartItems(globalCartData.items)
-      setOrderSummary(globalCartData.summary)
     }
     setLoading(false)
   }, [globalCartData])
