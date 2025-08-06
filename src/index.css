@@ -2,716 +2,145 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Isolation for coreFORCE Integration */
+/* Minimal CSS isolation for coreFORCE Integration */
 #react-checkout-root {
-  /* Reset all inherited styles */
-  all: unset;
+  /* Basic container setup */
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background: #f9fafb;
   
-  /* Ensure our checkout has its own isolated styling context */
-  contain: layout style;
-  isolation: isolate;
-  
-  /* Set our own base styles */
-  display: block !important;
-  box-sizing: border-box !important;
-  width: 100% !important;
-  min-height: 100vh !important;
-  
-  /* Reset font and text properties that might be inherited */
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
-  font-size: 16px !important;
-  line-height: 1.5 !important;
-  color: #111827 !important;
+  /* Ensure proper font rendering */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #111827;
   
   /* Reset margins and padding */
-  margin: 0 !important;
-  padding: 0 !important;
-  
-  /* Ensure proper background */
-  background: #f9fafb !important;
+  margin: 0;
+  padding: 0;
   
   /* Prevent parent z-index issues */
-  position: relative !important;
-  z-index: 1000 !important;
+  position: relative;
+  z-index: 1000;
 }
 
-/* Reset all elements within our checkout to prevent inheritance */
+/* Ensure proper box-sizing for all elements */
 #react-checkout-root *,
 #react-checkout-root *::before,
 #react-checkout-root *::after {
-  box-sizing: border-box !important;
+  box-sizing: border-box;
 }
 
-/* Ensure our checkout components don't inherit unwanted styles */
-#react-checkout-root div,
-#react-checkout-root span,
-#react-checkout-root h1,
-#react-checkout-root h2,
-#react-checkout-root h3,
-#react-checkout-root h4,
-#react-checkout-root h5,
-#react-checkout-root h6,
-#react-checkout-root p,
-#react-checkout-root button,
-#react-checkout-root input,
-#react-checkout-root select,
-#react-checkout-root textarea,
-#react-checkout-root form,
-#react-checkout-root label,
-#react-checkout-root table,
-#react-checkout-root tr,
-#react-checkout-root td,
-#react-checkout-root th {
-  /* Reset inherited properties that commonly cause issues */
-  font-family: inherit !important;
-  font-size: inherit !important;
-  line-height: inherit !important;
-  color: inherit !important;
-  margin: initial !important;
-  padding: initial !important;
-  border: initial !important;
-  background: initial !important;
-  text-decoration: initial !important;
-  text-transform: initial !important;
-  letter-spacing: initial !important;
-  word-spacing: initial !important;
-}
-
-/* Prevent parent CSS from affecting our buttons and form elements */
+/* Basic button reset to prevent coreFORCE button styles */
 #react-checkout-root button {
-  all: unset;
-  box-sizing: border-box !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
 }
 
+/* Basic input reset */
 #react-checkout-root input,
 #react-checkout-root select,
 #react-checkout-root textarea {
-  all: unset;
-  box-sizing: border-box !important;
-  display: block !important;
-  width: 100% !important;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
-/* Ensure our checkout takes full available space and doesn't get squeezed */
-#react-checkout-root .min-h-screen {
-  min-height: 100vh !important;
-}
-
-/* Override any parent flex or grid that might compress our layout */
-#react-checkout-root .max-w-7xl,
-#react-checkout-root .max-w-6xl {
-  max-width: 80rem !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* Ensure proper spacing and layout */
-#react-checkout-root .grid {
-  display: grid !important;
-}
-
-#react-checkout-root .flex {
-  display: flex !important;
-}
-
-/* Prevent text and sizing issues */
-#react-checkout-root {
-  font-feature-settings: normal !important;
-  font-variation-settings: normal !important;
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important;
-}
-
-/* Additional isolation for the checkout app container */
-#react-checkout-root .checkout-app-container {
-  /* Ensure we don't inherit any unwanted display properties */
-  display: block !important;
-  width: 100% !important;
-  
-  /* Reset any transforms or positioning that might be inherited */
-  transform: none !important;
-  position: relative !important;
-  
-  /* Ensure proper overflow handling */
-  overflow: visible !important;
-  
-  /* Reset any inherited flexbox or grid properties from parent */
-  flex: none !important;
-  grid-area: auto !important;
-}
-
-/* Ensure our modals and overlays aren't affected by parent z-index stacking */
-#react-checkout-root .fixed {
-  position: fixed !important;
-  z-index: 9999 !important;
-}
-
-/* Protect against parent CSS that might affect our images */
+/* Ensure images display properly */
 #react-checkout-root img {
-  max-width: 100% !important;
-  height: auto !important;
-  display: block !important;
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-/* Ensure our form elements have proper styling */
+/* Ensure SVG icons work properly */
+#react-checkout-root svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Ensure proper form element styling */
 #react-checkout-root input[type="text"],
 #react-checkout-root input[type="email"],
 #react-checkout-root input[type="password"],
 #react-checkout-root input[type="number"],
+#react-checkout-root input[type="tel"],
+#react-checkout-root input[type="url"],
 #react-checkout-root select,
 #react-checkout-root textarea {
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+  color: #111827;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
-/* Additional protection for specific coreFORCE interference */
-#react-checkout-root table,
+#react-checkout-root input[type="text"]:focus,
+#react-checkout-root input[type="email"]:focus,
+#react-checkout-root input[type="password"]:focus,
+#react-checkout-root input[type="number"]:focus,
+#react-checkout-root input[type="tel"]:focus,
+#react-checkout-root input[type="url"]:focus,
+#react-checkout-root select:focus,
+#react-checkout-root textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Ensure proper table styling */
+#react-checkout-root table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
 #react-checkout-root th,
 #react-checkout-root td {
-  border-collapse: initial !important;
-  border-spacing: initial !important;
-  text-align: initial !important;
-  vertical-align: initial !important;
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-/* AGGRESSIVE OVERRIDES for coreFORCE-specific issues */
-/* Target the specific layout compression problems */
-
-/* Override coreFORCE grid container that's compressing our layout */
-.grid-container #react-checkout-root {
-  grid-column: 1 / -1 !important;
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 !important;
-  padding: 20px !important;
-}
-
-/* Force proper sizing even if parent has constraints */
-#react-checkout-root {
-  min-width: 300px !important;
-  width: 100% !important;
-  max-width: none !important;
-  height: auto !important;
-  min-height: 600px !important;
-  
-  /* Override any parent flex/grid constraints */
-  flex-grow: 1 !important;
-  flex-shrink: 0 !important;
-  flex-basis: auto !important;
-  
-  /* Ensure we break out of any parent layout constraints */
-  grid-column: 1 / -1 !important;
-  grid-row: auto !important;
-}
-
-/* Override coreFORCE's potential CSS reset or layout styles */
-#react-checkout-root * {
-  /* Force our styles over any CSS reset */
-  all: revert !important;
-  box-sizing: border-box !important;
-}
-
-/* Re-establish our component styles after the revert */
-/* Background Colors */
-#react-checkout-root .bg-white { background-color: #ffffff !important; }
-#react-checkout-root .bg-gray-50 { background-color: #f9fafb !important; }
-#react-checkout-root .bg-gray-100 { background-color: #f3f4f6 !important; }
-#react-checkout-root .bg-gray-200 { background-color: #e5e7eb !important; }
-#react-checkout-root .bg-blue-50 { background-color: #eff6ff !important; }
-#react-checkout-root .bg-blue-600 { background-color: #2563eb !important; }
-#react-checkout-root .bg-blue-700 { background-color: #1d4ed8 !important; }
-#react-checkout-root .bg-green-600 { background-color: #16a34a !important; }
-#react-checkout-root .bg-red-100 { background-color: #fee2e2 !important; }
-#react-checkout-root .bg-red-200 { background-color: #fecaca !important; }
-#react-checkout-root .bg-yellow-50 { background-color: #fffbeb !important; }
-
-/* Text Colors */
-#react-checkout-root .text-white { color: #ffffff !important; }
-#react-checkout-root .text-gray-900 { color: #111827 !important; }
-#react-checkout-root .text-gray-700 { color: #374151 !important; }
-#react-checkout-root .text-gray-600 { color: #4b5563 !important; }
-#react-checkout-root .text-gray-500 { color: #6b7280 !important; }
-#react-checkout-root .text-gray-400 { color: #9ca3af !important; }
-#react-checkout-root .text-blue-600 { color: #2563eb !important; }
-#react-checkout-root .text-blue-700 { color: #1d4ed8 !important; }
-#react-checkout-root .text-red-600 { color: #dc2626 !important; }
-#react-checkout-root .text-red-700 { color: #b91c1c !important; }
-#react-checkout-root .text-red-800 { color: #991b1b !important; }
-#react-checkout-root .text-green-600 { color: #16a34a !important; }
-#react-checkout-root .text-yellow-600 { color: #ca8a04 !important; }
-
-#react-checkout-root .p-4 { padding: 1rem !important; }
-#react-checkout-root .p-6 { padding: 1.5rem !important; }
-#react-checkout-root .p-8 { padding: 2rem !important; }
-
-#react-checkout-root .m-4 { margin: 1rem !important; }
-#react-checkout-root .mx-auto { margin-left: auto !important; margin-right: auto !important; }
-
-#react-checkout-root .rounded { border-radius: 0.25rem !important; }
-#react-checkout-root .rounded-lg { border-radius: 0.5rem !important; }
-
-#react-checkout-root .border { border-width: 1px !important; }
-#react-checkout-root .border-gray-300 { border-color: #d1d5db !important; }
-
-#react-checkout-root .shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important; }
-#react-checkout-root .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important; }
-#react-checkout-root .shadow-md { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important; }
-#react-checkout-root .shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important; }
-
-/* Border Utilities */
-#react-checkout-root .border-0 { border-width: 0px !important; }
-#react-checkout-root .border-2 { border-width: 2px !important; }
-#react-checkout-root .border-t { border-top-width: 1px !important; }
-#react-checkout-root .border-b { border-bottom-width: 1px !important; }
-#react-checkout-root .border-l { border-left-width: 1px !important; }
-#react-checkout-root .border-r { border-right-width: 1px !important; }
-
-/* Border Colors */
-#react-checkout-root .border-transparent { border-color: transparent !important; }
-#react-checkout-root .border-gray-200 { border-color: #e5e7eb !important; }
-#react-checkout-root .border-blue-300 { border-color: #93c5fd !important; }
-#react-checkout-root .border-blue-600 { border-color: #2563eb !important; }
-
-/* Transitions */
-#react-checkout-root .transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important; transition-duration: 150ms !important; }
-#react-checkout-root .transition-all { transition-property: all !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important; transition-duration: 150ms !important; }
-
-/* Cursor */
-#react-checkout-root .cursor-pointer { cursor: pointer !important; }
-#react-checkout-root .cursor-not-allowed { cursor: not-allowed !important; }
-
-/* Hover States */
-#react-checkout-root .hover\:bg-blue-700:hover { background-color: #1d4ed8 !important; }
-#react-checkout-root .hover\:bg-gray-50:hover { background-color: #f9fafb !important; }
-#react-checkout-root .hover\:border-blue-300:hover { border-color: #93c5fd !important; }
-#react-checkout-root .hover\:text-gray-700:hover { color: #374151 !important; }
-
-/* SVG and Icon Support - AGGRESSIVE PROTECTION */
-#react-checkout-root svg {
-  display: inline-block !important;
-  vertical-align: middle !important;
-  width: 1em !important;
-  height: 1em !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  /* Don't force fill - let individual SVGs control this */
-}
-
-/* Ensure SVG elements are NEVER hidden */
-#react-checkout-root svg,
-#react-checkout-root svg * {
-  display: inline-block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  clip: auto !important;
-  clip-path: none !important;
-}
-
-/* Explicit sizing for SVG containers */
-#react-checkout-root .w-4 svg,
-#react-checkout-root .h-4 svg {
-  width: 1rem !important;
-  height: 1rem !important;
-}
-
-#react-checkout-root .w-5 svg,
-#react-checkout-root .h-5 svg {
-  width: 1.25rem !important;
-  height: 1.25rem !important;
-}
-
-#react-checkout-root .w-6 svg,
-#react-checkout-root .h-6 svg {
-  width: 1.5rem !important;
-  height: 1.5rem !important;
-}
-
-#react-checkout-root .w-8 svg,
-#react-checkout-root .h-8 svg {
-  width: 2rem !important;
-  height: 2rem !important;
-}
-
-#react-checkout-root .w-16 svg,
-#react-checkout-root .h-16 svg {
-  width: 4rem !important;
-  height: 4rem !important;
-}
-
-/* SVG path and stroke handling */
-#react-checkout-root svg path {
-  /* Let the SVG attributes control fill/stroke */
-}
-
-#react-checkout-root svg[fill="currentColor"] {
-  fill: currentColor !important;
-}
-
-#react-checkout-root svg[stroke="currentColor"] {
-  stroke: currentColor !important;
-}
-
-#react-checkout-root svg[fill="currentColor"] path {
-  fill: currentColor !important;
-}
-
-#react-checkout-root svg[stroke="currentColor"] path {
-  stroke: currentColor !important;
-  fill: none !important;
-}
-
-#react-checkout-root svg[fill="none"] {
-  fill: none !important;
-}
-
-#react-checkout-root svg[fill="none"] path {
-  fill: none !important;
-}
-
-/* Ensure stroke properties work correctly */
-#react-checkout-root svg path[stroke="currentColor"] {
-  stroke: currentColor !important;
-}
-
-#react-checkout-root svg path[fill="currentColor"] {
-  fill: currentColor !important;
-}
-
-/* Force stroke-based icons to be visible */
-#react-checkout-root svg[stroke="currentColor"] {
-  stroke: currentColor !important;
-  fill: none !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-#react-checkout-root svg[stroke="currentColor"] path {
-  stroke: currentColor !important;
-  fill: none !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  stroke-width: 2 !important;
-}
-
-/* Force stroke on ALL path elements within stroke-based SVGs */
-#react-checkout-root svg[stroke="currentColor"] path,
-#react-checkout-root svg path[stroke="currentColor"] {
-  stroke: currentColor !important;
-  fill: none !important;
-  stroke-width: 2 !important;
-  stroke-linecap: round !important;
-  stroke-linejoin: round !important;
-}
-
-/* Additional protection for specific stroke attributes */
-#react-checkout-root svg path[stroke-linecap="round"] {
-  stroke-linecap: round !important;
-}
-
-#react-checkout-root svg path[stroke-linejoin="round"] {
-  stroke-linejoin: round !important;
-}
-
-#react-checkout-root svg path[stroke-width="2"] {
-  stroke-width: 2 !important;
-}
-
-/* NUCLEAR OPTION: Force stroke on ALL SVG paths */
-#react-checkout-root svg path {
-  stroke: #6b7280 !important; /* Force gray color instead of currentColor */
-  fill: none !important;
-  stroke-width: 2 !important;
-  stroke-linecap: round !important;
-  stroke-linejoin: round !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Force specific colors for different contexts */
-#react-checkout-root button:hover svg path {
-  stroke: #dc2626 !important; /* Red on hover for delete buttons */
-}
-
-#react-checkout-root .text-blue-600 svg path,
-#react-checkout-root .text-blue-600:hover svg path {
-  stroke: #2563eb !important; /* Blue for Continue Shopping */
-}
-
-#react-checkout-root .text-gray-400 svg path {
-  stroke: #9ca3af !important; /* Light gray for default state */
-}
-
-#react-checkout-root .text-green-600 svg path {
-  stroke: #16a34a !important; /* Green for success states */
-}
-
-/* But allow fill-based icons to work */
-#react-checkout-root svg[fill="currentColor"] path {
-  fill: currentColor !important;
-  stroke: none !important;
-}
-
-/* Button container protection */
-#react-checkout-root button {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Specific protection for quantity control buttons */
-#react-checkout-root .w-8.h-8 {
-  width: 2rem !important;
-  height: 2rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Animation support for spinning icons */
-#react-checkout-root .animate-spin {
-  animation: spin 1s linear infinite !important;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Force proper spacing for our layout */
-#react-checkout-root .space-y-4 > * + * { margin-top: 1rem !important; }
-#react-checkout-root .space-y-6 > * + * { margin-top: 1.5rem !important; }
-#react-checkout-root .space-x-4 > * + * { margin-left: 1rem !important; }
-#react-checkout-root .space-x-1 > * + * { margin-left: 0.25rem !important; }
-#react-checkout-root .space-x-2 > * + * { margin-left: 0.5rem !important; }
-#react-checkout-root .space-x-3 > * + * { margin-left: 0.75rem !important; }
-
-/* Border and Border Radius */
-#react-checkout-root .border { border-width: 1px !important; }
-#react-checkout-root .border-gray-300 { border-color: #d1d5db !important; }
-#react-checkout-root .border-red-200 { border-color: #fecaca !important; }
-#react-checkout-root .rounded { border-radius: 0.25rem !important; }
-#react-checkout-root .rounded-lg { border-radius: 0.5rem !important; }
-#react-checkout-root .rounded-md { border-radius: 0.375rem !important; }
-
-/* Display Classes */
-#react-checkout-root .inline-flex { display: inline-flex !important; }
-#react-checkout-root .flex { display: flex !important; }
-#react-checkout-root .grid { display: grid !important; }
-#react-checkout-root .block { display: block !important; }
-#react-checkout-root .inline-block { display: inline-block !important; }
-#react-checkout-root .hidden { display: none !important; }
-
-/* CSS Grid Layout Classes */
-#react-checkout-root .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
-#react-checkout-root .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-#react-checkout-root .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-
-/* Responsive Grid Classes for Large Screens (1024px+) */
-@media (min-width: 1024px) {
-  #react-checkout-root .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  #react-checkout-root .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-  #react-checkout-root .lg\:col-span-1 { grid-column: span 1 / span 1 !important; }
-  #react-checkout-root .lg\:col-span-2 { grid-column: span 2 / span 2 !important; }
-}
-
-/* Grid Column Span */
-#react-checkout-root .col-span-1 { grid-column: span 1 / span 1 !important; }
-#react-checkout-root .col-span-2 { grid-column: span 2 / span 2 !important; }
-#react-checkout-root .col-span-3 { grid-column: span 3 / span 3 !important; }
-
-/* Grid Gap */
-#react-checkout-root .gap-4 { gap: 1rem !important; }
-#react-checkout-root .gap-6 { gap: 1.5rem !important; }
-#react-checkout-root .gap-8 { gap: 2rem !important; }
-
-/* Flexbox and Alignment */
-#react-checkout-root .items-center { align-items: center !important; }
-#react-checkout-root .items-start { align-items: flex-start !important; }
-#react-checkout-root .justify-center { justify-content: center !important; }
-#react-checkout-root .justify-between { justify-content: space-between !important; }
-#react-checkout-root .justify-start { justify-content: flex-start !important; }
-
-/* Sizing */
-#react-checkout-root .w-full { width: 100% !important; }
-#react-checkout-root .w-auto { width: auto !important; }
-#react-checkout-root .w-4 { width: 1rem !important; }
-#react-checkout-root .w-5 { width: 1.25rem !important; }
-#react-checkout-root .w-6 { width: 1.5rem !important; }
-#react-checkout-root .w-8 { width: 2rem !important; }
-#react-checkout-root .w-16 { width: 4rem !important; }
-#react-checkout-root .w-20 { width: 5rem !important; }
-#react-checkout-root .w-24 { width: 6rem !important; }
-#react-checkout-root .w-32 { width: 8rem !important; }
-#react-checkout-root .w-48 { width: 12rem !important; }
-#react-checkout-root .w-64 { width: 16rem !important; }
-
-#react-checkout-root .h-full { height: 100% !important; }
-#react-checkout-root .h-auto { height: auto !important; }
-#react-checkout-root .h-4 { height: 1rem !important; }
-#react-checkout-root .h-5 { height: 1.25rem !important; }
-#react-checkout-root .h-6 { height: 1.5rem !important; }
-#react-checkout-root .h-8 { height: 2rem !important; }
-#react-checkout-root .h-16 { height: 4rem !important; }
-#react-checkout-root .h-20 { height: 5rem !important; }
-#react-checkout-root .h-24 { height: 6rem !important; }
-#react-checkout-root .h-32 { height: 8rem !important; }
-#react-checkout-root .h-48 { height: 12rem !important; }
-#react-checkout-root .h-64 { height: 16rem !important; }
-
-/* Max Width for Container Classes */
-#react-checkout-root .max-w-2xl { max-width: 42rem !important; }
-#react-checkout-root .max-w-4xl { max-width: 56rem !important; }
-#react-checkout-root .max-w-6xl { max-width: 72rem !important; }
-#react-checkout-root .max-w-7xl { max-width: 80rem !important; }
-
-/* Image Sizing - Prevent oversized product images */
-#react-checkout-root img {
-  max-width: 100% !important;
-  height: auto !important;
-  display: block !important;
-  object-fit: cover !important;
-}
-
-/* Specific product image size constraints */
-#react-checkout-root .w-16.h-16 img,
-#react-checkout-root .w-20.h-20 img,
-#react-checkout-root .w-24.h-24 img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-}
-
-/* Padding and Margin */
-#react-checkout-root .p-2 { padding: 0.5rem !important; }
-#react-checkout-root .p-3 { padding: 0.75rem !important; }
-#react-checkout-root .p-4 { padding: 1rem !important; }
-#react-checkout-root .p-6 { padding: 1.5rem !important; }
-#react-checkout-root .p-8 { padding: 2rem !important; }
-
-#react-checkout-root .px-2 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
-#react-checkout-root .px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
-#react-checkout-root .px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-#react-checkout-root .px-8 { padding-left: 2rem !important; padding-right: 2rem !important; }
-
-#react-checkout-root .py-0\.5 { padding-top: 0.125rem !important; padding-bottom: 0.125rem !important; }
-#react-checkout-root .py-2 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
-#react-checkout-root .py-3 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
-#react-checkout-root .py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
-#react-checkout-root .py-6 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
-#react-checkout-root .py-8 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
-
-#react-checkout-root .m-2 { margin: 0.5rem !important; }
-#react-checkout-root .m-4 { margin: 1rem !important; }
-#react-checkout-root .m-6 { margin: 1.5rem !important; }
-#react-checkout-root .m-8 { margin: 2rem !important; }
-
-#react-checkout-root .mx-auto { margin-left: auto !important; margin-right: auto !important; }
-#react-checkout-root .my-2 { margin-top: 0.5rem !important; margin-bottom: 0.5rem !important; }
-#react-checkout-root .my-4 { margin-top: 1rem !important; margin-bottom: 1rem !important; }
-#react-checkout-root .my-6 { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; }
-#react-checkout-root .my-8 { margin-top: 2rem !important; margin-bottom: 2rem !important; }
-
-#react-checkout-root .mb-2 { margin-bottom: 0.5rem !important; }
-#react-checkout-root .mb-4 { margin-bottom: 1rem !important; }
-#react-checkout-root .mb-6 { margin-bottom: 1.5rem !important; }
-#react-checkout-root .mb-8 { margin-bottom: 2rem !important; }
-
-#react-checkout-root .mt-2 { margin-top: 0.5rem !important; }
-#react-checkout-root .mt-4 { margin-top: 1rem !important; }
-#react-checkout-root .mt-6 { margin-top: 1.5rem !important; }
-#react-checkout-root .mt-8 { margin-top: 2rem !important; }
-
-/* Responsive Spacing for Small/Medium Screens */
+/* Responsive container adjustments */
 @media (min-width: 640px) {
-  #react-checkout-root .sm\:px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+  #react-checkout-root .container {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  #react-checkout-root .container {
+    max-width: 768px;
+  }
 }
 
 @media (min-width: 1024px) {
-  #react-checkout-root .lg\:px-8 { padding-left: 2rem !important; padding-right: 2rem !important; }
+  #react-checkout-root .container {
+    max-width: 1024px;
+  }
 }
 
-/* Typography */
-#react-checkout-root .text-xs { font-size: 0.75rem !important; line-height: 1rem !important; }
-#react-checkout-root .text-sm { font-size: 0.875rem !important; line-height: 1.25rem !important; }
-#react-checkout-root .text-base { font-size: 1rem !important; line-height: 1.5rem !important; }
-#react-checkout-root .text-lg { font-size: 1.125rem !important; line-height: 1.75rem !important; }
-#react-checkout-root .text-xl { font-size: 1.25rem !important; line-height: 1.75rem !important; }
-#react-checkout-root .text-2xl { font-size: 1.5rem !important; line-height: 2rem !important; }
-#react-checkout-root .text-3xl { font-size: 1.875rem !important; line-height: 2.25rem !important; }
-#react-checkout-root .font-medium { font-weight: 500 !important; }
-#react-checkout-root .font-semibold { font-weight: 600 !important; }
-#react-checkout-root .font-bold { font-weight: 700 !important; }
-#react-checkout-root .font-extrabold { font-weight: 800 !important; }
-
-/* Text alignment classes */
-#react-checkout-root .text-left { text-align: left !important; }
-#react-checkout-root .text-center { text-align: center !important; }
-#react-checkout-root .text-right { text-align: right !important; }
-
-/* Ensure buttons are properly styled */
-#react-checkout-root .btn,
-#react-checkout-root button {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0.5rem 1rem !important;
-  border-radius: 0.375rem !important;
-  font-weight: 500 !important;
-  cursor: pointer !important;
-  transition: all 0.15s ease-in-out !important;
-}
-
-/* Form inputs */
-#react-checkout-root input,
-#react-checkout-root select,
-#react-checkout-root textarea {
-  display: block !important;
-  width: 100% !important;
-  padding: 0.5rem 0.75rem !important;
-  border: 1px solid #d1d5db !important;
-  border-radius: 0.375rem !important;
-  background-color: #ffffff !important;
-  font-size: 1rem !important;
-  line-height: 1.5 !important;
-}
-
-/* Override any parent transforms that might compress the layout */
-#react-checkout-root,
-#react-checkout-root * {
-  transform: none !important;
-  transform-origin: initial !important;
-  perspective: none !important;
-  backface-visibility: visible !important;
-}
-
-/* CRITICAL: Override any display:none that might hide our elements */
-#react-checkout-root button,
-#react-checkout-root svg,
-#react-checkout-root .w-8,
-#react-checkout-root .h-8,
-#react-checkout-root .w-4,
-#react-checkout-root .h-4,
-#react-checkout-root .w-5,
-#react-checkout-root .h-5 {
-  display: inline-block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Force button elements to be visible */
-#react-checkout-root button[class*="w-"],
-#react-checkout-root button[class*="h-"] {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+@media (min-width: 1280px) {
+  #react-checkout-root .container {
+    max-width: 1280px;
+  }
 }
