@@ -55,8 +55,8 @@ export function transformCoreFORCECartData(coreforceData: CoreFORCEShoppingCartR
   const discountPercent = parseFloat(coreforceData.discount_percent) || 0
   const totalSavings = parseCommaSeparatedNumber(coreforceData.total_savings) || 0
   
-  // Estimate tax (you may want to calculate this based on your business logic)
-  const estimatedTax = subtotal * 0.08 // 8% tax rate as example
+  // Tax computation removed
+  const estimatedTax = 0
   
   const total = subtotal + shipping + estimatedTax - (discount || 0)
 

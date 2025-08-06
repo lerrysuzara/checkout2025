@@ -292,8 +292,8 @@ export const mockCartItems: CartItem[] = [
 
 export const calculateOrderSummary = (items: CartItem[]): OrderSummary => {
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = subtotal > 100 ? 0 : 9.99;
-  const tax = subtotal * 0.08; // 8% tax rate
+  const shipping = 0; // Free shipping for demo
+  const tax = 0; // Tax computation removed
   const total = subtotal + shipping + tax;
 
   return {

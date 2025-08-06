@@ -86,7 +86,7 @@ export const calculateOrderSummaryFromCoreFORCE = (coreFORCEData: CoreFORCEShopp
   
   const shipping = parseCommaSeparatedNumber(coreFORCEData.estimated_shipping_charge) || 0;
   const discount = parseCommaSeparatedNumber(coreFORCEData.discount_amount) || 0;
-  const tax = (subtotal - discount) * 0.08; // 8% tax rate (adjust as needed)
+  const tax = 0; // Tax computation removed
   const total = subtotal + shipping + tax - discount;
 
   return {

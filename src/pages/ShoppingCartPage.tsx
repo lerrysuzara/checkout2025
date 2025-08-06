@@ -82,7 +82,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
     // Recalculate summary manually since we're not using calculateOrderSummary
     const subtotal = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
     const shipping = orderSummary?.shipping || 0
-    const tax = subtotal * 0.08 // 8% tax rate
+    const tax = 0 // Removed tax computation
     const discount = orderSummary?.discount || null
     const total = subtotal + shipping + tax - (discount || 0)
     
@@ -102,7 +102,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
     // Recalculate summary manually
     const subtotal = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
     const shipping = orderSummary?.shipping || 0
-    const tax = subtotal * 0.08 // 8% tax rate
+    const tax = 0 // Removed tax computation
     const discount = orderSummary?.discount || null
     const total = subtotal + shipping + tax - (discount || 0)
     

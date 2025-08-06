@@ -43,14 +43,11 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
       return
     }
 
-    // Recalculate order summary
+    // Calculate order summary
     const subtotal = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-    const shipping = parseFloat(cartData.summary.shipping.toString()) || 0
-    const discount = parseFloat(cartData.summary.discount?.toString() || '0') || 0
-    const discountPercent = parseFloat(cartData.summary.discountPercent?.toString() || '0') || 0
-    const totalSavings = parseFloat(cartData.summary.totalSavings?.toString() || '0') || 0
-    const estimatedTax = subtotal * 0.08 // 8% tax rate as example
-    const total = subtotal + shipping + estimatedTax - discount
+    const shipping = 0 // Free shipping for now
+    const estimatedTax = 0 // Tax computation removed
+    const total = subtotal + shipping + estimatedTax
 
     const updatedSummary: OrderSummary = {
       ...cartData.summary,
