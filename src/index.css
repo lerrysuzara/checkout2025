@@ -45,6 +45,75 @@
   cursor: pointer;
 }
 
+/* Force button styling for checkout buttons */
+#react-checkout-root button[class*="bg-blue-600"] {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease-in-out !important;
+  display: inline-block !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  width: 100% !important;
+}
+
+#react-checkout-root button[class*="bg-blue-600"]:hover {
+  background-color: #1d4ed8 !important;
+}
+
+/* Product image container isolation */
+#react-checkout-root .w-16.h-16,
+#react-checkout-root .w-20.h-20,
+#react-checkout-root .w-12.h-12 {
+  width: 4rem !important;
+  height: 4rem !important;
+  min-width: 4rem !important;
+  min-height: 4rem !important;
+  max-width: 4rem !important;
+  max-height: 4rem !important;
+  flex-shrink: 0 !important;
+  overflow: hidden !important;
+  border-radius: 0.5rem !important;
+  background-color: #f3f4f6 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#react-checkout-root .w-20.h-20 {
+  width: 5rem !important;
+  height: 5rem !important;
+  min-width: 5rem !important;
+  min-height: 5rem !important;
+  max-width: 5rem !important;
+  max-height: 5rem !important;
+}
+
+#react-checkout-root .w-12.h-12 {
+  width: 3rem !important;
+  height: 3rem !important;
+  min-width: 3rem !important;
+  min-height: 3rem !important;
+  max-width: 3rem !important;
+  max-height: 3rem !important;
+}
+
+/* Product image styling */
+#react-checkout-root .w-16.h-16 img,
+#react-checkout-root .w-20.h-20 img,
+#react-checkout-root .w-12.h-12 img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
 /* Basic input reset */
 #react-checkout-root input,
 #react-checkout-root select,
@@ -57,19 +126,6 @@
   border: none;
   padding: 0;
   margin: 0;
-}
-
-/* Ensure images display properly */
-#react-checkout-root img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Ensure SVG icons work properly */
-#react-checkout-root svg {
-  display: inline-block;
-  vertical-align: middle;
 }
 
 /* Ensure proper form element styling */
