@@ -364,7 +364,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                   </div>
                   
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Shipping</span>
+                    <span className="text-gray-600">Estimated Shipping</span>
                     <span className="font-medium">
                       {orderSummary.shipping === 0 ? 'Free' : `$${orderSummary.shipping.toFixed(2)}`}
                     </span>
@@ -374,6 +374,13 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                     <span className="text-gray-600">Estimated Sales Tax</span>
                     <span className="font-medium">${orderSummary.tax.toFixed(2)}</span>
                   </div>
+                  
+                  {orderSummary.totalSavings && orderSummary.totalSavings > 0 && (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Total Savings</span>
+                      <span>${orderSummary.totalSavings.toFixed(2)}</span>
+                    </div>
+                  )}
                   
                   {/* Promo Code Section */}
                   <div className="border-t border-gray-200 pt-3">

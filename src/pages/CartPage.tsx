@@ -326,7 +326,7 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
             )}
             
             <div className="flex justify-between text-sm sm:text-base">
-              <span>Shipping</span>
+              <span>Estimated Shipping</span>
               <span>${summary.shipping.toFixed(2)}</span>
             </div>
             
