@@ -278,7 +278,9 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                             className="text-gray-400 hover:text-red-500 transition-colors"
                             title="Remove item"
                           >
-                            <span className="text-lg">✕</span>
+                            <svg className="w-5 h-5" fill="none" stroke="#9ca3af" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
                           </button>
                         </div>
 
@@ -290,14 +292,18 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                               className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
                               disabled={item.quantity <= 1}
                             >
-                              <span className="text-sm font-bold">−</span>
+                              <svg className="w-4 h-4" fill="none" stroke="#6b7280" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                              </svg>
                             </button>
                             <span className="w-12 text-center font-medium">{item.quantity}</span>
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
                             >
-                              <span className="text-sm font-bold">+</span>
+                              <svg className="w-4 h-4" fill="none" stroke="#6b7280" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                              </svg>
                             </button>
                           </div>
                           <div className="text-right">
@@ -322,7 +328,9 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                 onClick={handleContinueShopping}
                 className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-2"
               >
-                <span className="text-lg">←</span>
+                <svg className="w-4 h-4" fill="none" stroke="#2563eb" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
                 <span>Continue Shopping</span>
               </button>
             </div>
@@ -385,7 +393,9 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
                             onClick={() => setShowPromoCodeInput(true)}
                             className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center space-x-1"
                           >
-                            <span className="text-lg">+</span>
+                            <svg className="w-4 h-4" fill="none" stroke="#2563eb" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
                             <span>Have a promo code?</span>
                           </button>
                         ) : (
@@ -460,7 +470,7 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
               
               <div className="mt-4 text-center">
                 <p className="text-xs text-gray-500">
-                  Secure checkout powered by industry-standard encryption
+                  Secure checkout
                 </p>
               </div>
             </div>
