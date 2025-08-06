@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CSS Variables for button customization - can be overridden from parent page */
+:root {
+  --checkout-button-bg: #2563eb;
+  --checkout-button-hover-bg: #1d4ed8;
+  --checkout-button-text: #ffffff;
+  --checkout-button-border: transparent;
+  --checkout-button-border-radius: 0.5rem;
+  --checkout-button-padding: 0.75rem 1.5rem;
+  --checkout-button-font-weight: 500;
+  --checkout-button-transition: background-color 0.15s ease-in-out;
+}
+
+/* Apply CSS variables to checkout buttons */
+.bg-blue-600 {
+  background-color: var(--checkout-button-bg) !important;
+  color: var(--checkout-button-text) !important;
+  border: 1px solid var(--checkout-button-border) !important;
+  border-radius: var(--checkout-button-border-radius) !important;
+  padding: var(--checkout-button-padding) !important;
+  font-weight: var(--checkout-button-font-weight) !important;
+  transition: var(--checkout-button-transition) !important;
+}
+
+.bg-blue-600:hover {
+  background-color: var(--checkout-button-hover-bg) !important;
+}
+
+/* Also apply to other common button classes */
+.btn-primary,
+.checkout-button {
+  background-color: var(--checkout-button-bg) !important;
+  color: var(--checkout-button-text) !important;
+  border: 1px solid var(--checkout-button-border) !important;
+  border-radius: var(--checkout-button-border-radius) !important;
+  padding: var(--checkout-button-padding) !important;
+  font-weight: var(--checkout-button-font-weight) !important;
+  transition: var(--checkout-button-transition) !important;
+}
+
+.btn-primary:hover,
+.checkout-button:hover {
+  background-color: var(--checkout-button-hover-bg) !important;
+}

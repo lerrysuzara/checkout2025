@@ -24,9 +24,22 @@ declare global {
 function App() {
   // Global state for cart data
   const [globalCartData, setGlobalCartData] = useState<any>(null)
+  
+  // Detect if app is embedded (not standalone)
+  const isEmbedded = () => {
+    return window.parent !== window || 
+           window.location.href.includes('embedded') ||
+           window.location.href.includes('iframe') ||
+           document.referrer !== '';
+  }
 
-  // Function to load mock data
+  // Function to load mock data (only in standalone mode)
   const loadMockData = () => {
+    if (isEmbedded()) {
+      console.log('🚫 Mock data loading disabled when embedded')
+      return;
+    }
+    
     console.log('🔄 Loading simple mock data...')
     
     // Use simple mock cart items
@@ -45,8 +58,13 @@ function App() {
     console.log('✅ Simple mock data loaded:', mockData)
   }
 
-  // Function to load coreFORCE mock data
+  // Function to load coreFORCE mock data (only in standalone mode)
   const loadCoreFORCEMockData = () => {
+    if (isEmbedded()) {
+      console.log('🚫 Mock data loading disabled when embedded')
+      return;
+    }
+    
     console.log('🔄 Loading coreFORCE mock data...')
     
     if (validateCoreFORCECartData(mockCoreFORCEShoppingCartResponse)) {
@@ -87,9 +105,14 @@ function App() {
       }
     }
 
-    // Expose mock data loading functions
-    ;(window as any).loadMockData = loadMockData
-    ;(window as any).loadCoreFORCEMockData = loadCoreFORCEMockData
+    // Expose mock data loading functions (only in standalone mode)
+    if (!isEmbedded()) {
+      ;(window as any).loadMockData = loadMockData
+      ;(window as any).loadCoreFORCEMockData = loadCoreFORCEMockData
+      console.log('🧪 Mock data functions available: loadMockData(), loadCoreFORCEMockData()')
+    } else {
+      console.log('🚫 Mock data functions disabled when embedded')
+    }
 
     // Also expose a function to check if the app is ready
     ;(window as any).isReactAppReady = () => {
@@ -97,12 +120,14 @@ function App() {
     }
 
     console.log('🚀 React App initialized - updateCartData function exposed')
-    console.log('🧪 Mock data functions available: loadMockData(), loadCoreFORCEMockData()')
+    console.log(`🌐 App mode: ${isEmbedded() ? 'Embedded' : 'Standalone'}`)
     
-    // Load coreFORCE mock data by default for testing
-    setTimeout(() => {
-      loadCoreFORCEMockData()
-    }, 100)
+    // Load coreFORCE mock data by default for testing (only in standalone mode)
+    if (!isEmbedded()) {
+      setTimeout(() => {
+        loadCoreFORCEMockData()
+      }, 100)
+    }
     
     // Listen for messages from parent window (if in iframe)
     const handleMessage = (event: MessageEvent) => {
