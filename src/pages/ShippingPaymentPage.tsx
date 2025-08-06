@@ -60,6 +60,7 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
   const [autocompleteService, setAutocompleteService] = useState<AutocompleteService | null>(null)
   const [placesService, setPlacesService] = useState<PlacesService | null>(null)
   const [billingAddressSuggestions, setBillingAddressSuggestions] = useState<AutocompletePrediction[]>([])
+  const [googlePlacesAvailable, setGooglePlacesAvailable] = useState(false)
   const [showBillingSuggestions, setShowBillingSuggestions] = useState(false)
   const [availableShippingMethods, setAvailableShippingMethods] = useState<string[]>([])
   const [selectedStoreLocation, setSelectedStoreLocation] = useState('')
@@ -157,18 +158,44 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
     }
   }, [cartData])
 
-  // Initialize Google Places services
+  // Initialize Google Places services with retry logic
   useEffect(() => {
-    const google = (window as any).google
-    if (google && google.maps && google.maps.places) {
-      const autocomplete = new google.maps.places.AutocompleteService()
-      const places = new google.maps.places.PlacesService(document.createElement('div'))
-      
-      setAutocompleteService(autocomplete)
-      setPlacesService(places)
-      console.log('🗺️ Google Places services initialized')
-    } else {
-      console.log('⚠️ Google Places API not loaded yet')
+    const initializeGooglePlaces = () => {
+      const google = (window as any).google
+      if (google && google.maps && google.maps.places) {
+        try {
+          const autocomplete = new google.maps.places.AutocompleteService()
+          const places = new google.maps.places.PlacesService(document.createElement('div'))
+          
+          setAutocompleteService(autocomplete)
+          setPlacesService(places)
+          setGooglePlacesAvailable(true)
+          console.log('🗺️ Google Places services initialized')
+          return true
+        } catch (error) {
+          console.error('❌ Error initializing Google Places:', error)
+          return false
+        }
+      } else {
+        console.log('⚠️ Google Places API not loaded yet')
+        return false
+      }
+    }
+
+    // Try to initialize immediately
+    if (!initializeGooglePlaces()) {
+      // If not available, retry every 500ms for up to 10 seconds
+      let retryCount = 0
+      const maxRetries = 20
+      const retryInterval = setInterval(() => {
+        retryCount++
+        if (initializeGooglePlaces()) {
+          clearInterval(retryInterval)
+        } else if (retryCount >= maxRetries) {
+          clearInterval(retryInterval)
+          console.error('❌ Failed to initialize Google Places after 10 seconds')
+        }
+      }, 500)
     }
   }, [])
 
@@ -281,7 +308,8 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
         }
       )
     } else {
-      console.log('⚠️ Autocomplete service not available')
+      console.log('⚠️ Autocomplete service not available - user can still enter address manually')
+      // Don't show error to user, just allow manual entry
     }
   }
 
@@ -1007,9 +1035,14 @@ const ShippingPaymentPage = ({ globalCartData }: ShippingPaymentPageProps) => {
                         onFocus={() => addressSuggestions.length > 0 && setShowSuggestions(true)}
                         onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Start typing your address..."
+                        placeholder={googlePlacesAvailable ? "Start typing your address..." : "Enter your address manually"}
                         required
                       />
+                      {!googlePlacesAvailable && (
+                        <p className="mt-1 text-sm text-gray-500">
+                          Address autocomplete is not available. You can still enter your address manually below.
+                        </p>
+                      )}
                       
                       {/* Address Suggestions Dropdown */}
                       {showSuggestions && addressSuggestions.length > 0 && (
