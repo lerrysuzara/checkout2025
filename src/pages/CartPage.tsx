@@ -154,6 +154,14 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
   }
 
   if (!cartData || cartData.items.length === 0) {
+    // Detect if app is embedded
+    const isEmbedded = () => {
+      return window.parent !== window || 
+             window.location.href.includes('embedded') ||
+             window.location.href.includes('iframe') ||
+             document.referrer !== '';
+    }
+
     console.log('🛒 Cart is empty. cartData:', cartData, 'items length:', cartData?.items?.length)
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -161,26 +169,30 @@ const CartPage = ({ globalCartData }: CartPageProps) => {
           <div className="text-gray-400 mb-4">🛒</div>
           <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
           <p className="text-gray-600 mb-4">No items found in your shopping cart.</p>
-          <p className="text-sm text-gray-500 mb-4">Debug: cartData = {JSON.stringify(cartData)}</p>
+          {!isEmbedded() && (
+            <p className="text-sm text-gray-500 mb-4">Debug: cartData = {JSON.stringify(cartData)}</p>
+          )}
           
-          {/* Mock Data Loading Buttons */}
-          <div className="space-y-3 mb-6">
-            <p className="text-sm text-gray-500">Load test data:</p>
-            <div className="flex flex-col sm:flex-row gap-2 justify-center">
-              <button 
-                onClick={() => (window as any).loadMockData?.()}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
-              >
-                Load Simple Mock Data
-              </button>
-              <button 
-                onClick={() => (window as any).loadCoreFORCEMockData?.()}
-                className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm"
-              >
-                Load CoreFORCE Mock Data
-              </button>
+          {/* Mock Data Loading Buttons (only in standalone mode) */}
+          {!isEmbedded() && (
+            <div className="space-y-3 mb-6">
+              <p className="text-sm text-gray-500">Load test data:</p>
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                <button 
+                  onClick={() => (window as any).loadMockData?.()}
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
+                >
+                  Load Simple Mock Data
+                </button>
+                <button 
+                  onClick={() => (window as any).loadCoreFORCEMockData?.()}
+                  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm"
+                >
+                  Load CoreFORCE Mock Data
+                </button>
+              </div>
             </div>
-          </div>
+          )}
           
 
         </div>

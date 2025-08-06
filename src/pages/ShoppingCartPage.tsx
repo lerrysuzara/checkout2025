@@ -26,8 +26,22 @@ const ShoppingCartPage = ({ globalCartData }: ShoppingCartPageProps) => {
   const [promoCodeLoading, setPromoCodeLoading] = useState(false)
 
   useEffect(() => {
-    // Load mock data if no cart data is provided
+    // Detect if app is embedded
+    const isEmbedded = () => {
+      return window.parent !== window || 
+             window.location.href.includes('embedded') ||
+             window.location.href.includes('iframe') ||
+             document.referrer !== '';
+    }
+
+    // Load mock data if no cart data is provided (only in standalone mode)
     if (!globalCartData || !globalCartData.items || globalCartData.items.length === 0) {
+      if (isEmbedded()) {
+        console.log('🚫 Mock data loading disabled when embedded')
+        setLoading(false)
+        return
+      }
+      
       console.log('🛒 Loading coreFORCE mock shopping cart data...')
       
       if (validateCoreFORCECartData(mockCoreFORCEShoppingCartResponse)) {
